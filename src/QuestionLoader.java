@@ -2,9 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.HashMap;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class QuestionLoader {
     private final File folder;
@@ -26,11 +24,10 @@ public class QuestionLoader {
      * @return A map mapping questions to the correct answers
      * @throws FileNotFoundException Occurs if the given topic was not found in the topics folder
      */
-    public HashMap<String, String> getEntries(String topic) throws FileNotFoundException {
+    public Answer getEntries(String topic) throws FileNotFoundException {
         var reader = new BufferedReader(new FileReader(folder.getAbsolutePath() + "/" + topic + FILE_EXTENSION));
-        return new HashMap<>(reader.lines()
-                .map(s -> s.split("="))
-                .collect(Collectors.toMap(line -> line[0], line -> line[1])));
+        // Todo add wrongs
+        return new Answer(reader.lines().toArray(String[]::new));
     }
 
     public String[] listTopics() {

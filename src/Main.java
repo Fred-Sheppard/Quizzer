@@ -8,7 +8,11 @@ public class Main {
         for (String s : topics) {
             System.out.println(s);
         }
-        var map = loader.getEntries("CS");
-        System.out.println(map);
+        var answer = loader.getEntries("CS");
+        System.out.println(answer);
+        var wrongs = answer.wrongs();
+        for (String s : wrongs) {
+            System.out.println(s);
+        }
     }
 }
