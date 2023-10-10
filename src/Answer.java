@@ -1,5 +1,9 @@
 import java.util.Arrays;
 
+/**
+ * A class representing a question, answer and set of wrong answers for a topic,
+ * to be loaded from a file.
+ */
 public class Answer {
 
     private final String question;
