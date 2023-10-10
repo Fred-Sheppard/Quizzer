@@ -6,15 +6,15 @@ public class Answer {
     private final String answer;
     private final String[] wrongs;
 
-    public Answer(String[] array) {
-        question = array[0];
-        answer = array[1];
-        wrongs = Arrays.stream(array).skip(2).toArray(String[]::new);
+    public Answer(String line) {
+        String[] arr = line.split(",");
+        question = arr[0];
+        answer = arr[1];
+        wrongs = Arrays.stream(arr).skip(2).toArray(String[]::new);
     }
 
     public String toString() {
-        return "Question: " + question +
-                "\nAnswer: " + answer;
+        return String.format("[Q: %s. A: %s. W: %s]", question, answer, Arrays.toString(wrongs));
     }
 
     public String question() {
