@@ -1,17 +1,23 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        QuestionLoader loader = new QuestionLoader(new File("test/questions/"));
+        QuestionLoader loader = new QuestionLoader(new File("/home/fred/Code/Java/Quizzer/test/questions/"));
+        Scanner input = new Scanner(System.in);
         String[] topics = loader.listTopics();
-        System.out.println("Topics:");
-        for (String s : topics) {
-            System.out.println(s);
+        ArrayList<String> options = new ArrayList<>();
+        options.add("Welcome to Quizzer! Select a topic to begin:");
+        for (int i = 0; i < topics.length; i++) {
+            options.add(String.format("(%d) %s", i, topics[i]));
         }
-        System.out.println();
-        var answers = loader.getEntries("CS");
-        for (Answer a : answers) {
+        int choice = awaitInput(input, new int[]{0, 1, 2}, options);
+        System.out.printf("Choice: (%d) %s%n", choice, topics[choice]);
+        var answers = loader.getEntries(topics[choice]);
+        for (var a : answers) {
             System.out.println(a);
         }
     }

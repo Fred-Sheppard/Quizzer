@@ -25,10 +25,10 @@ public class QuestionLoader {
      * @return A map mapping questions to the correct answers
      * @throws FileNotFoundException Occurs if the given topic was not found in the topics folder
      */
-    public ArrayList<Answer> getEntries(String topic) throws FileNotFoundException {
+    public ArrayList<Question> getEntries(String topic) throws FileNotFoundException {
         var reader = new BufferedReader(new FileReader(folder.getAbsolutePath() + "/" + topic + FILE_EXTENSION));
-        ArrayList<Answer> list = new ArrayList<>();
-        reader.lines().forEach(line -> list.add(new Answer(line)));
+        ArrayList<Question> list = new ArrayList<>();
+        reader.lines().forEach(line -> list.add(new Question(line)));
         return list;
     }
 
