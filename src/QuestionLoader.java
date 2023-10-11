@@ -23,10 +23,16 @@ public class QuestionLoader {
      *
      * @param topic The topic to retrieve the entries of e.g. CS, Maths
      * @return A map mapping questions to the correct answers
-     * @throws FileNotFoundException Occurs if the given topic was not found in the topics folder
      */
-    public ArrayList<Question> getEntries(String topic) throws FileNotFoundException {
-        var reader = new BufferedReader(new FileReader(folder.getAbsolutePath() + "/" + topic + FILE_EXTENSION));
+    public ArrayList<Question> getEntries(String topic) {
+        String path = String.format("%s/%s.txt", folder.getAbsolutePath(), topic);
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(path));
+        } catch (FileNotFoundException e) {
+            System.out.printf("File %s could not be found", path);
+            System.exit(1);
+        }
         ArrayList<Question> list = new ArrayList<>();
         reader.lines().forEach(line -> list.add(new Question(line)));
         return list;

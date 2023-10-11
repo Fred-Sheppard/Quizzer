@@ -1,46 +1,43 @@
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            clearScreen();
+            System.out.println("\nThanks for playing!");
+        }));
+        clearScreen();
         QuestionLoader loader = new QuestionLoader(new File("/home/fred/Code/Java/Quizzer/test/questions/"));
-        Scanner input = new Scanner(System.in);
         String[] topics = loader.listTopics();
-        ArrayList<String> options = new ArrayList<>();
-        options.add("Welcome to Quizzer! Select a topic to begin:");
+
+        StringBuilder builder = new StringBuilder("Welcome to Quizzer! Select a topic to begin:\n");
         for (int i = 0; i < topics.length; i++) {
-            options.add(String.format("(%d) %s", i, topics[i]));
+            builder.append(String.format("(%d) %s%n", i, topics[i]));
         }
-        int choice = awaitInput(input, new int[]{0, 1, 2}, options);
-        System.out.printf("Choice: (%d) %s%n", choice, topics[choice]);
-        var answers = loader.getEntries(topics[choice]);
-        for (var a : answers) {
-            System.out.println(a);
-        }
+
+        Scanner input = new Scanner(System.in);
+        int choice = awaitInput(input, 2, builder.toString());
+        Quiz quiz = new Quiz(topics[choice], loader, input);
+        quiz.askQuestions();
     }
 
     /**
      * Repeatedly prompts the user for a valid numerical input.
      *
-     * @param input   Scanner object to receive input
-     * @param options List of valid integers
-     * @param prompts Prompts to display to the user displaying valid options
+     * @param input    Scanner object to receive input
+     * @param maxValid The largest number input that is valid
+     * @param prompt   Prompt to display to the user displaying valid options
      */
-    public static int awaitInput(Scanner input, int[] options, ArrayList<String> prompts) {
+    public static int awaitInput(Scanner input, int maxValid, String prompt) {
         while (true) {
-            for (String s : prompts) {
-                System.out.println(s);
-            }
+            System.out.println(prompt);
             System.out.print("Choice: ");
             try {
-                String choice = input.next();
-                int i = Integer.parseInt(choice);
+                // Parse this way to avoid infinite loops
+                int choice = Integer.parseInt(input.next());
                 // If the selection was not a valid choice
-                if (Arrays.stream(options).filter(x -> x == i).findAny().isEmpty()) continue;
-                return i;
+                if (0 <= choice && choice <= maxValid) return choice;
             } catch (NumberFormatException ignored) {
             }
             clearScreen();

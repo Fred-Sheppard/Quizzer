@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * A class representing a question, answer and set of wrong answers for a topic,
@@ -8,7 +10,7 @@ public class Question {
 
     public enum Difficulty {
         EASY,
-        MEDIUM,
+        INTERMEDIATE,
         HARD
     }
 
@@ -43,6 +45,12 @@ public class Question {
 
     public Difficulty difficulty() {
         return difficulty;
+    }
+
+    public ArrayList<String> possibilities() {
+        ArrayList<String> list = new ArrayList<>(List.of(wrongs));
+        list.add(answer);
+        return list;
     }
 
 }
