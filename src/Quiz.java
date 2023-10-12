@@ -34,7 +34,7 @@ public class Quiz {
         }
     }
 
-    public void askQuestions() {
+    public void askQuestions(ArrayList<Question> questions) {
         Main.clearScreen();
         int numQuestions = questions.size();
         System.out.println("You have selected the " + topic + " topic.");
@@ -50,5 +50,14 @@ public class Quiz {
         System.out.printf("Quiz complete! You got %d out of %d questions correct! (%.0f%%)%n",
                 correct, numQuestions, (float) correct / (float) numQuestions * 100.0);
         Main.promptEnter();
+    }
+
+    public void randomOrderQuestions() {
+        System.out.println(questions.get(0));
+        //noinspection unchecked
+        ArrayList<Question> qs = (ArrayList<Question>) questions.clone();
+        Collections.shuffle(qs);
+        System.out.println(questions.get(0));
+        askQuestions(qs);
     }
 }

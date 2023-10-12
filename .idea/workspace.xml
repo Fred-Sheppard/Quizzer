@@ -4,13 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca8054c5-4c85-4f1a-9182-9e8cfd0e97a6" name="Changes" comment="Create basic quiz class&#10;&#10;- Create askQuestion method to ask a given question&#10;- Refactor awaitInput method&#10;- Refactor getEntries to handle IO errors">
-      <change afterPath="$PROJECT_DIR$/res/questions/CS.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/questions/CompOrg.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/res/questions/Maths.txt" afterDir="false" />
+    <list default="true" id="ca8054c5-4c85-4f1a-9182-9e8cfd0e97a6" name="Changes" comment="Improve question asking interface">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/res/questions/Maths.txt" beforeDir="false" afterPath="$PROJECT_DIR$/res/questions/Maths.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Question.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Question.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Quiz.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Quiz.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -95,7 +92,7 @@
       <workItem from="1697023885869" duration="8034000" />
       <workItem from="1697045961559" duration="637000" />
       <workItem from="1697105603622" duration="171000" />
-      <workItem from="1697105884335" duration="2339000" />
+      <workItem from="1697105884335" duration="3710000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -161,7 +158,31 @@
       <option name="project" value="LOCAL" />
       <updated>1697040927804</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Create directory to hold questions">
+      <option name="closed" value="true" />
+      <created>1697108456301</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1697108456301</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Create methods to aid with CLI UX&#10;&#10;- promptEnter holds the program until the user presses the Enter key&#10;- chooseTopic prompts the user to choose a quiz topic">
+      <option name="closed" value="true" />
+      <created>1697108645675</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1697108645675</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Improve question asking interface">
+      <option name="closed" value="true" />
+      <created>1697108701196</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1697108701196</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -187,6 +208,9 @@
     <MESSAGE value="Create function to repeatedly query the user for a valid input" />
     <MESSAGE value="Refactor Question class to include question difficulty&#10;&#10;- Rename Answer to Question&#10;- Include Difficulty enum" />
     <MESSAGE value="Create basic quiz class&#10;&#10;- Create askQuestion method to ask a given question&#10;- Refactor awaitInput method&#10;- Refactor getEntries to handle IO errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="Create basic quiz class&#10;&#10;- Create askQuestion method to ask a given question&#10;- Refactor awaitInput method&#10;- Refactor getEntries to handle IO errors" />
+    <MESSAGE value="Create directory to hold questions" />
+    <MESSAGE value="Create methods to aid with CLI UX&#10;&#10;- promptEnter holds the program until the user presses the Enter key&#10;- chooseTopic prompts the user to choose a quiz topic" />
+    <MESSAGE value="Improve question asking interface" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improve question asking interface" />
   </component>
 </project>

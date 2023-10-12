@@ -25,7 +25,7 @@ public class Main {
         while (true) {
             int choice = chooseTopic(topics, scanner);
             Quiz quiz = new Quiz(topics[choice], loader, scanner);
-            quiz.askQuestions();
+            quiz.randomOrderQuestions();
         }
     }
 
