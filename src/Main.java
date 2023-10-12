@@ -38,11 +38,15 @@ public class Main {
      */
     public static int chooseTopic(String[] topics, Scanner scanner) {
         clearScreen();
+        int options = topics.length;
         StringBuilder builder = new StringBuilder("Select a topic to begin:\n");
-        for (int i = 0; i < topics.length; i++) {
+        for (int i = 0; i < options; i++) {
             builder.append(String.format("(%d) %s%n", i, topics[i]));
         }
-        return awaitInput(scanner, 2, builder.toString());
+        builder.append(String.format("%n(%d) %s%n", options, "Exit"));
+        int choice = awaitInput(scanner, options, builder.toString());
+        if (choice == options) System.exit(0);
+        return choice;
     }
 
     /**
