@@ -52,5 +52,4 @@ public class Question {
         list.add(answer);
         return list;
     }
-
 }
