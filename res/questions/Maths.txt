@@ -1,0 +1,2 @@
+Which of the following is a basic operation in set theory?|Union|Differentiation|Multiplication|Factorisation|EASY
+Which of the following best describes a bijunction?|A function that is both injective (one-to-one) and surjective (onto)|A function that has multiple outputs for one input|A function where every element in the domain has a unique image in the codomain|A function that is neither injective nor surjective|INTERMEDIATE
