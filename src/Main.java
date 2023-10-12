@@ -3,11 +3,13 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        // Print message when the program closes, even if the close was unexpected
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             clearScreen();
             System.out.println("Thanks for playing!");
         }));
         clearScreen();
+        // Welcome messages
         System.out.println("""
                   ____  _    _ _____ __________________ _____
                 /  __ \\| |  | |_   _|___  /___  /  ____|  __ \\
@@ -21,6 +23,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String[] topics = loader.listTopics();
 
+        // Continuously ask questions
         //noinspection InfiniteLoopStatement
         while (true) {
             int choice = chooseTopic(topics, scanner);
@@ -51,6 +54,7 @@ public class Main {
 
     /**
      * Repeatedly prompts the user for a valid numerical input.
+     * Valid inputs include any integer from 0 to `maxValid`, inclusive.
      *
      * @param input    Scanner object to receive input
      * @param maxValid The largest number input that is valid
@@ -63,19 +67,26 @@ public class Main {
             try {
                 // Parse this way to avoid infinite loops
                 int choice = Integer.parseInt(input.next());
-                // If the selection was not a valid choice
+                // If the selection is valid
                 if (0 <= choice && choice <= maxValid) return choice;
             } catch (NumberFormatException ignored) {
+                // If the input was not a number at all, keep looping
             }
             clearScreen();
         }
     }
 
+    /**
+     * Clears the terminal
+     */
     public static void clearScreen() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
+    /**
+     * Pauses the app until the user presses the enter key
+     */
     public static void promptEnter() {
         System.out.println("Press Enter to continue");
         try {

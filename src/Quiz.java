@@ -2,6 +2,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
+/**
+ * Class representing a quiz.
+ * <p>
+ * A quiz is a set of questions asked in a specific order.
+ * This order could be random, based on difficulty,
+ * or on how successfully the user has answered each question in the past.
+ *
+ */
 public class Quiz {
 
     private final String topic;
@@ -14,7 +22,13 @@ public class Quiz {
         this.scanner = scanner;
     }
 
-    public boolean askQuestion(Question question) {
+    /**
+     * Asks a single question, and verifies if the user entered the correct answer.
+     *
+     * @param question The question to be asked
+     * @return If the user selected the correct answer
+     */
+    private boolean askQuestion(Question question) {
         Main.clearScreen();
         var possibilities = question.possibilities();
         Collections.shuffle(possibilities);
@@ -34,7 +48,14 @@ public class Quiz {
         }
     }
 
-    public void askQuestions(ArrayList<Question> questions) {
+    /**
+     * Asks all the questions in the given list.
+     * <p>
+     * This should not be called by outside consumers,
+     * who should instead call a helper method that specifies the order to ask the questions in.
+     * @param questions The list of questions to be asked
+     */
+    private void askQuestions(ArrayList<Question> questions) {
         Main.clearScreen();
         int numQuestions = questions.size();
         System.out.println("You have selected the " + topic + " topic.");
@@ -52,6 +73,9 @@ public class Quiz {
         Main.promptEnter();
     }
 
+    /**
+     * Asks the questions in a random order.
+     */
     public void randomOrderQuestions() {
         System.out.println(questions.get(0));
         //noinspection unchecked
