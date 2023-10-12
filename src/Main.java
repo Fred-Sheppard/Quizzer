@@ -5,21 +5,44 @@ public class Main {
     public static void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             clearScreen();
-            System.out.println("\nThanks for playing!");
+            System.out.println("Thanks for playing!");
         }));
         clearScreen();
-        QuestionLoader loader = new QuestionLoader(new File("/home/fred/Code/Java/Quizzer/test/questions/"));
+        System.out.println("""
+                  ____  _    _ _____ __________________ _____
+                /  __ \\| |  | |_   _|___  /___  /  ____|  __ \\
+                | |  | | |  | | | |    / /   / /| |__  | |__) |
+                | |  | | |  | | | |   / /   / / |  __| |  _  /
+                | |__| | |__| |_| |_ / /__ / /__| |____| | \\ \\
+                 \\___\\_\\\\____/|_____/_____/_____|______|_|  \\_\\""");
+        System.out.println("Welcome to Quizzer!");
+        promptEnter();
+        QuestionLoader loader = new QuestionLoader(new File("/home/fred/Code/Java/Quizzer/res/questions"));
+        Scanner scanner = new Scanner(System.in);
         String[] topics = loader.listTopics();
 
-        StringBuilder builder = new StringBuilder("Welcome to Quizzer! Select a topic to begin:\n");
+        //noinspection InfiniteLoopStatement
+        while (true) {
+            int choice = chooseTopic(topics, scanner);
+            Quiz quiz = new Quiz(topics[choice], loader, scanner);
+            quiz.askQuestions();
+        }
+    }
+
+    /**
+     * Prompts the user to select a topic to be quizzed on
+     *
+     * @param topics  The list of available topics
+     * @param scanner Scanner object to receive input
+     * @return The user's choice
+     */
+    public static int chooseTopic(String[] topics, Scanner scanner) {
+        clearScreen();
+        StringBuilder builder = new StringBuilder("Select a topic to begin:\n");
         for (int i = 0; i < topics.length; i++) {
             builder.append(String.format("(%d) %s%n", i, topics[i]));
         }
-
-        Scanner input = new Scanner(System.in);
-        int choice = awaitInput(input, 2, builder.toString());
-        Quiz quiz = new Quiz(topics[choice], loader, input);
-        quiz.askQuestions();
+        return awaitInput(scanner, 2, builder.toString());
     }
 
     /**
@@ -47,5 +70,14 @@ public class Main {
     public static void clearScreen() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
+    }
+
+    public static void promptEnter() {
+        System.out.println("Press Enter to continue");
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            System.in.read();
+        } catch (Exception ignored) {
+        }
     }
 }
