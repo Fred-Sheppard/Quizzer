@@ -7,6 +7,11 @@ public class Login {
     private final File userFile;
     private final HashMap<String, String> map;
 
+    /**
+     * Creates a new Login object.
+     *
+     * @param userFile File in which credentials are to be saved
+     */
     public Login(File userFile) {
         this.userFile = userFile;
         map = new HashMap<>();
@@ -22,6 +27,13 @@ public class Login {
         });
     }
 
+    /**
+     * Creates a user with the given username and password.
+     *
+     * @param user     The username of the user
+     * @param password The password of the user
+     * @return If the user was created successfully
+     */
     public boolean createUser(String user, String password) {
         if (map.containsKey(user)) {
             System.out.println("User already exists.");
@@ -37,7 +49,14 @@ public class Login {
         return true;
     }
 
-    public boolean checkLogin(String user, String password) {
+    /**
+     * Checks a given username and password to see if they are equal
+     *
+     * @param user     The username of the user
+     * @param password The password of the user
+     * @return If the login was successful
+     */
+    public boolean checkCredentials(String user, String password) {
         String hashedPass = String.valueOf(password.hashCode());
         if (!map.containsKey(user)) {
             System.out.println("Username not found");

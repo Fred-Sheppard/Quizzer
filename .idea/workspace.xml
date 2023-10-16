@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca8054c5-4c85-4f1a-9182-9e8cfd0e97a6" name="Changes" comment="Improve question asking interface">
-      <change afterPath="$PROJECT_DIR$/GameData/users.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Login.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="ca8054c5-4c85-4f1a-9182-9e8cfd0e97a6" name="Changes" comment="Small refactors">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/questions/Maths.txt" beforeDir="false" afterPath="$PROJECT_DIR$/res/questions/Maths.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Login.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Login.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Quiz.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Quiz.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -112,7 +107,7 @@
       <workItem from="1697105884335" duration="3710000" />
       <workItem from="1697119215313" duration="1577000" />
       <workItem from="1697197172447" duration="2387000" />
-      <workItem from="1697445043327" duration="6306000" />
+      <workItem from="1697445043327" duration="7986000" />
     </task>
     <task id="LOCAL-00001" summary="Initial Commit">
       <option name="closed" value="true" />
@@ -202,7 +197,31 @@
       <option name="project" value="LOCAL" />
       <updated>1697108701196</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Implement login">
+      <option name="closed" value="true" />
+      <created>1697465129791</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1697465129791</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Implement login">
+      <option name="closed" value="true" />
+      <created>1697465142283</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1697465142283</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Small refactors">
+      <option name="closed" value="true" />
+      <created>1697465178667</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1697465178667</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -231,6 +250,8 @@
     <MESSAGE value="Create directory to hold questions" />
     <MESSAGE value="Create methods to aid with CLI UX&#10;&#10;- promptEnter holds the program until the user presses the Enter key&#10;- chooseTopic prompts the user to choose a quiz topic" />
     <MESSAGE value="Improve question asking interface" />
-    <option name="LAST_COMMIT_MESSAGE" value="Improve question asking interface" />
+    <MESSAGE value="Implement login" />
+    <MESSAGE value="Small refactors" />
+    <option name="LAST_COMMIT_MESSAGE" value="Small refactors" />
   </component>
 </project>

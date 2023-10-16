@@ -36,7 +36,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         String[] topics = loader.listTopics();
 
-
         // Login
         Login login = new Login(new File("GameData/users.txt"));
         clearScreen();
@@ -124,6 +123,12 @@ public class Main {
         }
     }
 
+    /**
+     * Prompts the user to enter their username and password.
+     * Will loop until valid details are entered.
+     *
+     * @param login The login object to use
+     */
     public static void promptLogin(Login login) {
         clearScreen();
         Console console = System.console();
@@ -131,12 +136,18 @@ public class Main {
             clearScreen();
             String user = console.readLine("Enter username: ");
             var password = new String(console.readPassword("Enter password: "));
-            if (login.checkLogin(user, password)) break;
+            if (login.checkCredentials(user, password)) break;
         }
         System.out.println("Welcome back to Quizzer!");
         promptEnter();
     }
 
+    /**
+     * Prompts the user to create a new account.
+     * Will loop until it succeeds.
+     *
+     * @param login The login object to use
+     */
     public static void promptCreateUser(Login login) {
         clearScreen();
         // Loop while the passwords don't match or the username is already taken
@@ -147,6 +158,7 @@ public class Main {
             String username = console.readLine("Enter your new username: ");
             char[] pass1 = console.readPassword("Enter your new password: ");
             char[] pass2 = console.readPassword("Re-enter your new password: ");
+            // Assert the passwords are equal
             if (Arrays.equals(pass1, pass2)) {
                 name = username;
                 password = new String(pass1);
