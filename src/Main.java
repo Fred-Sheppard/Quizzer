@@ -4,22 +4,32 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
+
+    /**
+     * ASCII font of the Quizzer logo
+     */
+    static final String QUIZZER = """
+              ____  _    _ _____ __________________ _____
+            /  __ \\| |  | |_   _|___  /___  /  ____|  __ \\
+            | |  | | |  | | | |    / /   / /| |__  | |__) |
+            | |  | | |  | | | |   / /   / / |  __| |  _  /
+            | |__| | |__| |_| |_ / /__ / /__| |____| | \\ \\
+             \\___\\_\\\\____/|_____/_____/_____|______|_|  \\_\\""";
+
     public static void main(String[] args) {
-        // Print message when the program closes, even if the close was unexpected
+        // TODO Discuss how the users file will be laid out,
+        //  as this will influence how the 3rd quiz mode is implemented
+
+        // Print message when the program closes, even unexpectedly
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             clearScreen();
             System.out.println("Thanks for playing!");
+            System.out.println(QUIZZER);
         }));
 
         clearScreen();
         // Welcome messages
-        System.out.println("""
-                  ____  _    _ _____ __________________ _____
-                /  __ \\| |  | |_   _|___  /___  /  ____|  __ \\
-                | |  | | |  | | | |    / /   / /| |__  | |__) |
-                | |  | | |  | | | |   / /   / / |  __| |  _  /
-                | |__| | |__| |_| |_ / /__ / /__| |____| | \\ \\
-                 \\___\\_\\\\____/|_____/_____/_____|______|_|  \\_\\""");
+        System.out.println(QUIZZER);
         System.out.println("Welcome to Quizzer!");
         promptEnter();
         QuestionLoader loader = new QuestionLoader(new File("/home/fred/Code/Java/Quizzer/res/questions"));

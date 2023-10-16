@@ -38,7 +38,7 @@ public class Quiz {
         for (int i = 0; i < 4; i++) {
             builder.append(String.format("(%d) %s%n", i, possibilities.get(i)));
         }
-        int choice = Main.awaitInput(scanner, 3, builder.toString());
+        int choice = Main.promptInput(scanner, 3, builder.toString());
         if (choice == answer) {
             System.out.println("Correct! Well done.");
             return true;
@@ -77,11 +77,14 @@ public class Quiz {
      * Asks the questions in a random order.
      */
     public void randomOrderQuestions() {
-        System.out.println(questions.get(0));
-        //noinspection unchecked
-        ArrayList<Question> qs = (ArrayList<Question>) questions.clone();
-        Collections.shuffle(qs);
-        System.out.println(questions.get(0));
-        askQuestions(qs);
+        Collections.shuffle(questions);
+        askQuestions(questions);
+    }
+
+    /**
+     * Asks the questions in order of difficulty.
+     */
+    public void askOrderedQuestions() {
+        askQuestions(questions);
     }
 }
