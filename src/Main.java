@@ -1,4 +1,6 @@
+import java.io.Console;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -8,6 +10,7 @@ public class Main {
             clearScreen();
             System.out.println("Thanks for playing!");
         }));
+
         clearScreen();
         // Welcome messages
         System.out.println("""
@@ -22,6 +25,21 @@ public class Main {
         QuestionLoader loader = new QuestionLoader(new File("/home/fred/Code/Java/Quizzer/res/questions"));
         Scanner scanner = new Scanner(System.in);
         String[] topics = loader.listTopics();
+
+
+        // Login
+        Login login = new Login(new File("GameData/users.txt"));
+        clearScreen();
+        String loginPrompt = """
+                Are you a new or existing user?
+                (0) New
+                (1) Existing""";
+        boolean isExistingUser = promptInput(scanner, 1, loginPrompt) == 1;
+        if (isExistingUser) {
+            promptLogin(login);
+        } else {
+            promptCreateUser(login);
+        }
 
         // Continuously ask questions
         //noinspection InfiniteLoopStatement
@@ -47,7 +65,7 @@ public class Main {
             builder.append(String.format("(%d) %s%n", i, topics[i]));
         }
         builder.append(String.format("%n(%d) %s%n", options, "Exit"));
-        int choice = awaitInput(scanner, options, builder.toString());
+        int choice = promptInput(scanner, options, builder.toString());
         if (choice == options) System.exit(0);
         return choice;
     }
@@ -60,7 +78,7 @@ public class Main {
      * @param maxValid The largest number input that is valid
      * @param prompt   Prompt to display to the user displaying valid options
      */
-    public static int awaitInput(Scanner input, int maxValid, String prompt) {
+    public static int promptInput(Scanner input, int maxValid, String prompt) {
         while (true) {
             System.out.println(prompt);
             System.out.print("Choice: ");
@@ -94,5 +112,42 @@ public class Main {
             System.in.read();
         } catch (Exception ignored) {
         }
+    }
+
+    public static void promptLogin(Login login) {
+        clearScreen();
+        Console console = System.console();
+        while (true) {
+            clearScreen();
+            String user = console.readLine("Enter username: ");
+            var password = new String(console.readPassword("Enter password: "));
+            if (login.checkLogin(user, password)) break;
+        }
+        System.out.println("Welcome back to Quizzer!");
+        promptEnter();
+    }
+
+    public static void promptCreateUser(Login login) {
+        clearScreen();
+        // Loop while the passwords don't match or the username is already taken
+        String name;
+        String password;
+        Console console = System.console();
+        while (true) {
+            String username = console.readLine("Enter your new username: ");
+            char[] pass1 = console.readPassword("Enter your new password: ");
+            char[] pass2 = console.readPassword("Re-enter your new password: ");
+            if (Arrays.equals(pass1, pass2)) {
+                name = username;
+                password = new String(pass1);
+                // Loop if the user could not be created
+                if (!login.createUser(name, password)) continue;
+                break;
+            }
+            clearScreen();
+            System.out.println("Passwords must be the same.");
+        }
+        System.out.println("Success! Welcome to Quizzer!");
+        promptEnter();
     }
 }
