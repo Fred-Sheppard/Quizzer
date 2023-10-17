@@ -35,12 +35,11 @@ public class Main {
 
         // Login
         Login login = new Login(new File("GameData/users.txt"));
-        clearScreen();
         String loginPrompt = """
                 Are you a new or existing user?
                 (0) New
                 (1) Existing""";
-        boolean isExistingUser = promptInput(scanner, 1, loginPrompt) == 1;
+        boolean isExistingUser = promptInput(1, loginPrompt, scanner) == 1;
         String user;
         if (isExistingUser) {
             user = promptLogin(login);
@@ -53,7 +52,18 @@ public class Main {
         while (true) {
             int choice = chooseTopic(topics, scanner);
             Quiz quiz = new Quiz(topics[choice], user, loader, scanner);
-            quiz.redemptionQuestions();
+            int mode = promptInput(2, """
+                    Choose a gamemode:
+                    (0) Random
+                    (1) Escalation
+                    (2) Redemption""", scanner);
+            switch (mode) {
+                case 0 -> quiz.askRandom();
+                case 1 -> quiz.askEscalation();
+                case 2 -> quiz.askRedemption();
+                default -> {
+                } //unreachable
+            }
         }
     }
 
@@ -65,14 +75,13 @@ public class Main {
      * @return The user's choice
      */
     public static int chooseTopic(String[] topics, Scanner scanner) {
-        clearScreen();
         int options = topics.length;
         StringBuilder builder = new StringBuilder("Select a topic to begin:\n");
         for (int i = 0; i < options; i++) {
             builder.append(String.format("(%d) %s%n", i, topics[i]));
         }
         builder.append(String.format("%n(%d) %s%n", options, "Exit"));
-        int choice = promptInput(scanner, options, builder.toString());
+        int choice = promptInput(options, builder.toString(), scanner);
         if (choice == options) System.exit(0);
         return choice;
     }
@@ -81,12 +90,13 @@ public class Main {
      * Repeatedly prompts the user for a valid numerical input.
      * Valid inputs include any integer from 0 to `maxValid`, inclusive.
      *
-     * @param input    Scanner object to receive input
      * @param maxValid The largest number input that is valid
      * @param prompt   Prompt to display to the user displaying valid options
+     * @param input    Scanner object to receive input
      */
-    public static int promptInput(Scanner input, int maxValid, String prompt) {
+    public static int promptInput(int maxValid, String prompt, Scanner input) {
         while (true) {
+            clearScreen();
             System.out.println(prompt);
             System.out.print("Choice: ");
             try {
@@ -97,7 +107,6 @@ public class Main {
             } catch (NumberFormatException ignored) {
                 // If the input was not a number at all, keep looping
             }
-            clearScreen();
         }
     }
 

@@ -54,7 +54,7 @@ public class Quiz {
         for (int i = 0; i < 4; i++) {
             builder.append(String.format("(%d) %s%n", i, possibilities.get(i)));
         }
-        int choice = Main.promptInput(scanner, 3, builder.toString());
+        int choice = Main.promptInput(3, builder.toString(), scanner);
         if (choice == answer) {
             System.out.println("Correct! Well done.");
             return true;
@@ -103,7 +103,7 @@ public class Quiz {
     /**
      * Sorts and asks the questions, placing the user's worst-answered questions first.
      */
-    public void redemptionQuestions() {
+    public void askRedemption() {
         // Sort by the values in the map
         questions.sort((a, b) -> userHistory.getOrDefault(b.question(), 0)
                 .compareTo(userHistory.getOrDefault(a.question(), 0)));
@@ -113,7 +113,7 @@ public class Quiz {
     /**
      * Asks the questions in a random order.
      */
-    public void randomOrderQuestions() {
+    public void askRandom() {
         Collections.shuffle(questions);
         askQuestions(questions);
     }
@@ -121,7 +121,7 @@ public class Quiz {
     /**
      * Asks the questions in order of difficulty.
      */
-    public void sortedQuestions() {
+    public void askEscalation() {
         // Sort the questions by difficulty
         questions.sort(Comparator.comparing(Question::difficulty));
         askQuestions(questions);
