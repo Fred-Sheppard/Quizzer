@@ -17,9 +17,6 @@ public class Main {
              \\___\\_\\\\____/|_____/_____/_____|______|_|  \\_\\""";
 
     public static void main(String[] args) {
-        // TODO Discuss how the users file will be laid out,
-        //  as this will influence how the 3rd quiz mode is implemented
-
         // Print message when the program closes, even unexpectedly
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             clearScreen();
@@ -32,7 +29,7 @@ public class Main {
         System.out.println(QUIZZER);
         System.out.println("Welcome to Quizzer!");
         promptEnter();
-        QuestionLoader loader = new QuestionLoader(new File("/home/fred/Code/Java/Quizzer/res/questions"));
+        QuestionLoader loader = new QuestionLoader(new File("res/questions/"));
         Scanner scanner = new Scanner(System.in);
         String[] topics = loader.listTopics();
 
@@ -44,18 +41,19 @@ public class Main {
                 (0) New
                 (1) Existing""";
         boolean isExistingUser = promptInput(scanner, 1, loginPrompt) == 1;
+        String user;
         if (isExistingUser) {
-            promptLogin(login);
+            user = promptLogin(login);
         } else {
-            promptCreateUser(login);
+            user = promptCreateUser(login);
         }
 
         // Continuously ask questions
         //noinspection InfiniteLoopStatement
         while (true) {
             int choice = chooseTopic(topics, scanner);
-            Quiz quiz = new Quiz(topics[choice], loader, scanner);
-            quiz.randomOrderQuestions();
+            Quiz quiz = new Quiz(topics[choice], user, loader, scanner);
+            quiz.redemptionQuestions();
         }
     }
 
@@ -129,17 +127,19 @@ public class Main {
      *
      * @param login The login object to use
      */
-    public static void promptLogin(Login login) {
+    public static String promptLogin(Login login) {
+        String user;
         clearScreen();
         Console console = System.console();
         while (true) {
             clearScreen();
-            String user = console.readLine("Enter username: ");
+            user = console.readLine("Enter username: ");
             var password = new String(console.readPassword("Enter password: "));
             if (login.checkCredentials(user, password)) break;
         }
         System.out.println("Welcome back to Quizzer!");
         promptEnter();
+        return user;
     }
 
     /**
@@ -148,7 +148,7 @@ public class Main {
      *
      * @param login The login object to use
      */
-    public static void promptCreateUser(Login login) {
+    public static String promptCreateUser(Login login) {
         clearScreen();
         // Loop while the passwords don't match or the username is already taken
         String name;
@@ -171,5 +171,6 @@ public class Main {
         }
         System.out.println("Success! Welcome to Quizzer!");
         promptEnter();
+        return name;
     }
 }
