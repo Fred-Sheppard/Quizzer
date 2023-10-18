@@ -88,6 +88,7 @@ public class Quiz {
         Main.clearScreen();
         System.out.printf("Quiz complete! You got %d out of %d questions correct! (%.0f%%)%n",
                 correct, numQuestions, (float) correct / (float) numQuestions * 100.0);
+        userHistory.merge("Rounds", 1, Integer::sum);
         PrintWriter writer;
         try {
             writer = new PrintWriter(new FileWriter(userHistoryFile));
@@ -125,5 +126,18 @@ public class Quiz {
         // Sort the questions by difficulty
         questions.sort(Comparator.comparing(Question::difficulty));
         askQuestions(questions);
+    }
+
+    public double getStatistic(Statistic stat) {
+        int rounds = userHistory.get("Rounds");
+        var corrects = userHistory.values().stream().map(wrong -> rounds - wrong).toList();
+        int totalCorrect = corrects.stream().reduce(0, Integer::sum);
+        double mean = (double) totalCorrect / (rounds * userHistory.size());
+        return switch (stat) {
+            case MEAN -> mean;
+            case MEDIAN -> (double) corrects.stream().sorted().toList().get(corrects.size() / 2) / rounds;
+            case TOTAL_CORRECT -> totalCorrect;
+            case TOTAL_ANSWERED -> rounds * userHistory.size();
+        };
     }
 }

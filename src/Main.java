@@ -1,6 +1,7 @@
-import java.io.Console;
-import java.io.File;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
@@ -51,6 +52,10 @@ public class Main {
         //noinspection InfiniteLoopStatement
         while (true) {
             int choice = chooseTopic(topics, scanner);
+            if (choice == topics.length) {
+                showStats(new Quiz(topics[0], user, loader, scanner));
+                continue;
+            }
             Quiz quiz = new Quiz(topics[choice], user, loader, scanner);
             int mode = promptInput(2, """
                     Choose a gamemode:
@@ -80,10 +85,8 @@ public class Main {
         for (int i = 0; i < options; i++) {
             builder.append(String.format("(%d) %s%n", i, topics[i]));
         }
-        builder.append(String.format("%n(%d) %s%n", options, "Exit"));
-        int choice = promptInput(options, builder.toString(), scanner);
-        if (choice == options) System.exit(0);
-        return choice;
+        builder.append(String.format("%n(%d) %s", options, "Show stats"));
+        return promptInput(options, builder.toString(), scanner);
     }
 
     /**
@@ -98,10 +101,13 @@ public class Main {
         while (true) {
             clearScreen();
             System.out.println(prompt);
+            System.out.printf("%n(%d) Exit%n", maxValid + 1);
             System.out.print("Choice: ");
             try {
                 // Parse this way to avoid infinite loops
                 int choice = Integer.parseInt(input.next());
+                // All prompts should include the option to exit
+                if (choice == maxValid + 1) System.exit(0);
                 // If the selection is valid
                 if (0 <= choice && choice <= maxValid) return choice;
             } catch (NumberFormatException ignored) {
@@ -181,5 +187,57 @@ public class Main {
         System.out.println("Success! Welcome to Quizzer!");
         promptEnter();
         return name;
+    }
+
+    public static void showStats(Quiz quiz) {
+        clearScreen();
+        System.out.printf("Total Answered: %.0f%n", quiz.getStatistic(Statistic.TOTAL_ANSWERED));
+        System.out.printf("Total Correct: %.0f%n", quiz.getStatistic(Statistic.TOTAL_CORRECT));
+        System.out.printf("Mean: %.2f%n", quiz.getStatistic(Statistic.MEAN));
+        System.out.printf("Median: %.2f%n", quiz.getStatistic(Statistic.MEDIAN));
+        System.out.printf("StdDev: %.2f%n", stdDev());
+        promptEnter();
+    }
+
+    /**
+     * Calculates the standard deviation of the users' win-rate.
+     *
+     * @return Standard Deviation
+     */
+    public static double stdDev() {
+        // Each user has a list of all the problems they've gotten wrong
+        File userDir = new File("GameData/UserHistory/");
+        // Each index will hold the mean of a user
+        ArrayList<Double> means = new ArrayList<>();
+        for (String fileName : Objects.requireNonNull(userDir.list())) {
+            int totalWrong = 0;
+            int totalRounds = 1;
+            int questions = 1;
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader("GameData/UserHistory/" + fileName));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] split = line.split("\\|");
+                    if (split[0].equals("Rounds")) {
+                        totalRounds = Integer.parseInt(split[1]);
+                        continue;
+                    }
+                    totalWrong += Integer.parseInt(split[1]);
+                    questions++;
+                }
+                double totalQuestions = totalRounds * questions;
+                means.add(((totalQuestions - totalWrong) / totalQuestions));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        // Mean of the list of means (mu)
+        // Same as means.sum() / means.size()
+        double mu = means.stream().reduce(0.0, Double::sum) / means.size();
+        // SUM(x - mu)^2
+        double xMuSquared = means.stream().reduce(0.0, (accum, x) -> accum + (x - mu) * (x - mu));
+        // stdDev = sqrt[ (x - mu)^2 / N ]
+        int n = Objects.requireNonNull(userDir.list()).length;
+        return Math.sqrt(xMuSquared / n);
     }
 }
