@@ -1,7 +1,6 @@
-import java.io.*;
-import java.util.ArrayList;
+import java.io.Console;
+import java.io.File;
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
@@ -41,7 +40,7 @@ public class Main {
                 (0) New
                 (1) Existing""";
         boolean isExistingUser = promptInput(1, loginPrompt, scanner) == 1;
-        String user;
+        User user;
         if (isExistingUser) {
             user = promptLogin(login);
         } else {
@@ -53,7 +52,7 @@ public class Main {
         while (true) {
             int choice = chooseTopic(topics, scanner);
             if (choice == topics.length) {
-                showStats(new Quiz(topics[0], user, loader, scanner));
+                showStats(user);
                 continue;
             }
             Quiz quiz = new Quiz(topics[choice], user, loader, scanner);
@@ -67,7 +66,7 @@ public class Main {
                 case 1 -> quiz.askEscalation();
                 case 2 -> quiz.askRedemption();
                 default -> {
-                } //unreachable
+                } //unreachable, since promptInput does not allow invalid inputs
             }
         }
     }
@@ -142,7 +141,7 @@ public class Main {
      *
      * @param login The login object to use
      */
-    public static String promptLogin(Login login) {
+    public static User promptLogin(Login login) {
         String user;
         clearScreen();
         Console console = System.console();
@@ -154,7 +153,7 @@ public class Main {
         }
         System.out.println("Welcome back to Quizzer!");
         promptEnter();
-        return user;
+        return new User(user);
     }
 
     /**
@@ -163,7 +162,7 @@ public class Main {
      *
      * @param login The login object to use
      */
-    public static String promptCreateUser(Login login) {
+    public static User promptCreateUser(Login login) {
         clearScreen();
         // Loop while the passwords don't match or the username is already taken
         String name;
@@ -186,58 +185,16 @@ public class Main {
         }
         System.out.println("Success! Welcome to Quizzer!");
         promptEnter();
-        return name;
+        return new User(name);
     }
 
-    public static void showStats(Quiz quiz) {
+    public static void showStats(User user) {
         clearScreen();
-        System.out.printf("Total Answered: %.0f%n", quiz.getStatistic(Statistic.TOTAL_ANSWERED));
-        System.out.printf("Total Correct: %.0f%n", quiz.getStatistic(Statistic.TOTAL_CORRECT));
-        System.out.printf("Mean: %.2f%n", quiz.getStatistic(Statistic.MEAN));
-        System.out.printf("Median: %.2f%n", quiz.getStatistic(Statistic.MEDIAN));
-        System.out.printf("StdDev: %.2f%n", stdDev());
+        System.out.printf("Total Answered: %.0f%n", user.getStatistic(Statistic.TOTAL_ANSWERED));
+        System.out.printf("Total Correct: %.0f%n", user.getStatistic(Statistic.TOTAL_CORRECT));
+        System.out.printf("Mean: %.2f%n", user.getStatistic(Statistic.MEAN));
+        System.out.printf("Median: %.2f%n", user.getStatistic(Statistic.MEDIAN));
+        System.out.printf("StdDev: %.2f%n", User.stdDev());
         promptEnter();
-    }
-
-    /**
-     * Calculates the standard deviation of the users' win-rate.
-     *
-     * @return Standard Deviation
-     */
-    public static double stdDev() {
-        // Each user has a list of all the problems they've gotten wrong
-        File userDir = new File("GameData/UserHistory/");
-        // Each index will hold the mean of a user
-        ArrayList<Double> means = new ArrayList<>();
-        for (String fileName : Objects.requireNonNull(userDir.list())) {
-            int totalWrong = 0;
-            int totalRounds = 1;
-            int questions = 1;
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader("GameData/UserHistory/" + fileName));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    String[] split = line.split("\\|");
-                    if (split[0].equals("Rounds")) {
-                        totalRounds = Integer.parseInt(split[1]);
-                        continue;
-                    }
-                    totalWrong += Integer.parseInt(split[1]);
-                    questions++;
-                }
-                double totalQuestions = totalRounds * questions;
-                means.add(((totalQuestions - totalWrong) / totalQuestions));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        // Mean of the list of means (mu)
-        // Same as means.sum() / means.size()
-        double mu = means.stream().reduce(0.0, Double::sum) / means.size();
-        // SUM(x - mu)^2
-        double xMuSquared = means.stream().reduce(0.0, (accum, x) -> accum + (x - mu) * (x - mu));
-        // stdDev = sqrt[ (x - mu)^2 / N ]
-        int n = Objects.requireNonNull(userDir.list()).length;
-        return Math.sqrt(xMuSquared / n);
     }
 }
