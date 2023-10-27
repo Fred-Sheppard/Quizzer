@@ -11,7 +11,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
+/* JavaFX Application that, when called, Displays a window with 3 fields, one for username, password, and re-entered password.
+        String[] accountDetails = createAccountDialog.display();
+        String user=accountDetails[0];
+        String pass=accountDetails[1];
+        String re-enter_pass=accountDetails[2];
+*/
 public class CreateAccount {
 
     private String username;
