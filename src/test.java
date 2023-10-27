@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.*;
+//Test class used to test JavaFX applicaitions. DO NOT SHIP WITH FINAL EDIITION
 public class test
 {public static void main(String args[])
     {promptLogin loginPage = new promptLogin();
