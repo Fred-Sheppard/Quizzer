@@ -75,18 +75,21 @@ public class User {
      */
     public double getStatistic(Statistic stat) {
         // How many rounds in total have been answered
-        int rounds = history.get("Rounds");
+        int rounds = history.getOrDefault("Rounds", 0);
+        //noinspection unchecked
+        var map = (HashMap<String, Integer>) history.clone();
+        map.remove("Rounds");
         // List corresponding to each question, counting how many times each was answered correctly
-        List<Integer> corrects = history.values().stream().map(wrong -> rounds - wrong).toList();
+        List<Integer> corrects = map.values().stream().map(wrong -> rounds - wrong).toList();
         // How many questions have ever been answered correctly
         int totalCorrect = corrects.stream().reduce(0, Integer::sum);
         return switch (stat) {
             // #correct questions divided by #total questions answered
-            case MEAN -> (double) totalCorrect / (rounds * history.size());
+            case MEAN -> (double) totalCorrect / (rounds * map.size());
             // The middle of the sorted list of correctly answered questions
             case MEDIAN -> (double) corrects.stream().sorted().toList().get(corrects.size() / 2) / rounds;
             case TOTAL_CORRECT -> totalCorrect;
-            case TOTAL_ANSWERED -> rounds * history.size();
+            case TOTAL_ANSWERED -> rounds * map.size();
         };
     }
 
@@ -96,6 +99,23 @@ public class User {
      * @return The standard deviation of all users
      */
     public static double stdDev() {
+        var means = userMeans();
+        // Mean of the list of means (mu)
+        // Same as means.sum() / means.size()
+        double mu = means.stream().reduce(0.0, Double::sum) / means.size();
+        // SUM(x - mu)^2
+        double xLessMuSquared = means.stream().reduce(0.0, (accum, x) -> accum + (x - mu) * (x - mu));
+        // stdDev = sqrt[ (x - mu)^2 / N ]
+        int n = means.size();
+        return Math.sqrt(xLessMuSquared / n);
+    }
+
+    /**
+     * Returns a list of the means of all users.
+     *
+     * @return ArrayList of means
+     */
+    public static ArrayList<Double> userMeans() {
         // Each user has a list of all the problems they've gotten wrong
         File userDir = new File("GameData/UserHistory/");
         // Each index will hold the mean of a user
@@ -105,13 +125,6 @@ public class User {
             User user = new User(name.split("\\.")[0]);
             means.add(user.getStatistic(Statistic.MEAN));
         }
-        // Mean of the list of means (mu)
-        // Same as means.sum() / means.size()
-        double mu = means.stream().reduce(0.0, Double::sum) / means.size();
-        // SUM(x - mu)^2
-        double xLessMuSquared = means.stream().reduce(0.0, (accum, x) -> accum + (x - mu) * (x - mu));
-        // stdDev = sqrt[ (x - mu)^2 / N ]
-        int n = Objects.requireNonNull(userDir.list()).length;
-        return Math.sqrt(xLessMuSquared / n);
+        return means;
     }
 }

@@ -46,6 +46,7 @@ public class Quiz {
         int choice = Main.promptInput(3, builder.toString(), scanner);
         if (choice == answer) {
             System.out.println("Correct! Well done.");
+            user.history.putIfAbsent(question.question(), 0);
             return true;
         } else {
             System.out.println("Sorry. The correct answer was " + answer);
