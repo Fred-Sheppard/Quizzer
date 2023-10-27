@@ -15,6 +15,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/*JavaFX Application to Show have two text boxes, which will take username and password, and return them to original class. Call with the following:
+LoginPage loginPage = new LoginPage();
+String[] credentials = loginPage.display();
+System.out.println("Username: " + credentials[0]);
+System.out.println("Password: " + credentials[1]);
+*/
+
 public class promptLogin {
 
     private String user;
