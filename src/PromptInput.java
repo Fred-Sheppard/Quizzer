@@ -11,12 +11,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 /*
- * JavaFX Application that opens a new window and displays a string passed to it, then asks the user to press any of a given number of buttons
- * Call it in another class with the following code:
- * PromptInput prompt = new PromptInput();
- * int choice = prompt.display("Your question here", n);  
- * choice is the given output, which can be 0,1,2,3...
- * n is the number of buttons-1
+  JavaFX Application that opens a new window and displays a string passed to it, then asks the user to press any of a given number of buttons
+  Call it in another class with the following code:
+  PromptInput prompt = new PromptInput();
+  int choice = prompt.display("Your question here", n);  
+  choice is the given output, which can be 0,1,2,3...
+  n is the number of buttons-1
  */
 
 public class PromptInput {
