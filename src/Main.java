@@ -27,19 +27,19 @@ public class Main {
         clearScreen();
         // Welcome messages
         System.out.println(QUIZZER);
-        System.out.println("Welcome to Quizzer!");
+        //System.out.println("Welcome to Quizzer!");
         promptEnter();
         QuestionLoader loader = new QuestionLoader(new File("res/questions/"));
         Scanner scanner = new Scanner(System.in);
         String[] topics = loader.listTopics();
-
         // Login
         Login login = new Login(new File("GameData/users.txt"));
         String loginPrompt = """
                 Are you a new or existing user?
                 (0) New
                 (1) Existing""";
-        boolean isExistingUser = promptInput(1, loginPrompt, scanner) == 1;
+        PromptInput prompt = new PromptInput();
+        boolean isExistingUser = prompt.display(loginPrompt, 1) == 1;
         User user;
         if (isExistingUser) {
             user = promptLogin(login);
@@ -56,17 +56,18 @@ public class Main {
                 continue;
             }
             Quiz quiz = new Quiz(topics[choice], user, loader, scanner);
-            int mode = promptInput(2, """
+            PromptInput prompt = new PromptInput();
+            int mode = prompt.display("""
                     Choose a gamemode:
                     (0) Random
                     (1) Escalation
-                    (2) Redemption""", scanner);
+                    (2) Redemption""", 2);
             switch (mode) {
                 case 0 -> quiz.askRandom();
                 case 1 -> quiz.askEscalation();
                 case 2 -> quiz.askRedemption();
                 default -> {
-                } //unreachable, since promptInput does not allow invalid inputs
+                } //unreachable, since PromptInput does not allow invalid inputs
             }
         }
     }
@@ -85,7 +86,8 @@ public class Main {
             builder.append(String.format("(%d) %s%n", i, topics[i]));
         }
         builder.append(String.format("%n(%d) %s", options, "Show stats"));
-        return promptInput(options, builder.toString(), scanner);
+        PromptInput prompt = new PromptInput();
+        return prompt.display(builder.toString(), options);
     }
 
     /**
@@ -96,6 +98,8 @@ public class Main {
      * @param prompt   Prompt to display to the user displaying valid options
      * @param input    Scanner object to receive input
      */
+   
+    /* Use Code only for CLI
     public static int promptInput(int maxValid, String prompt, Scanner input) {
         while (true) {
             clearScreen();
@@ -114,6 +118,7 @@ public class Main {
             }
         }
     }
+    */
 
     /**
      * Clears the terminal
@@ -125,15 +130,16 @@ public class Main {
 
     /**
      * Pauses the app until the user presses the enter key
+     * Obsolete code only for CLI
      */
-    public static void promptEnter() {
+    /*public static void promptEnter() {
         System.out.println("Press Enter to continue");
         try {
             //noinspection ResultOfMethodCallIgnored
             System.in.read();
         } catch (Exception ignored) {
         }
-    }
+    }*/
 
     /**
      * Prompts the user to enter their username and password.
@@ -146,13 +152,17 @@ public class Main {
         clearScreen();
         Console console = System.console();
         while (true) {
-            clearScreen();
-            user = console.readLine("Enter username: ");
-            var password = new String(console.readPassword("Enter password: "));
+            LoginPage loginPage = new LoginPage();
+            String[] credentials = loginPage.display();
+            String user=credentials[0];
+            String password=credentials[1];
+            //clearScreen();
+            //user = console.readLine("Enter username: ");
+            //var password = new String(console.readPassword("Enter password: "));
             if (login.checkCredentials(user, password)) break;
         }
-        System.out.println("Welcome back to Quizzer!");
-        promptEnter();
+        //System.out.println("Welcome back to Quizzer!");
+       // promptEnter();
         return new User(user);
     }
 
@@ -169,9 +179,14 @@ public class Main {
         String password;
         Console console = System.console();
         while (true) {
-            String username = console.readLine("Enter your new username: ");
-            char[] pass1 = console.readPassword("Enter your new password: ");
-            char[] pass2 = console.readPassword("Re-enter your new password: ");
+            String[] accountDetails = createAccountDialog.display();
+            String user=accountDetails[0];
+            String pass1=accountDetails[1];
+            String pass2=accountDetails[2];
+            //String username = console.readLine("Enter your new username: ");
+            //char[] pass1 = console.readPassword("Enter your new password: ");
+            //char[] pass2 = console.readPassword("Re-enter your new password: ");
+            //Commented out the parts of the code that use CLI
             // Assert the passwords are equal
             if (Arrays.equals(pass1, pass2)) {
                 name = username;
@@ -180,11 +195,11 @@ public class Main {
                 if (!login.createUser(name, password)) continue;
                 break;
             }
-            clearScreen();
-            System.out.println("Passwords must be the same.");
+            //clearScreen();
+            //System.out.println("Passwords must be the same.");
         }
-        System.out.println("Success! Welcome to Quizzer!");
-        promptEnter();
+       // System.out.println("Success! Welcome to Quizzer!");
+        //promptEnter();
         return new User(name);
     }
 
