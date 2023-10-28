@@ -19,7 +19,7 @@ import javafx.stage.Stage;
  * n is the number of buttons-1
  */
 
-public class PromptInput {
+public class promptInput {
 
     private int fontSize = 18;
     private int result = 0; 
