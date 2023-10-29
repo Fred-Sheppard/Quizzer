@@ -181,8 +181,8 @@ public class Main {
         while (true) {
             String[] accountDetails = createAccountDialog.display();
             String user=accountDetails[0];
-            String pass1=accountDetails[1];
-            String pass2=accountDetails[2];
+            char[] pass1=accountDetails[1];
+            char[] pass2=accountDetails[2];
             //String username = console.readLine("Enter your new username: ");
             //char[] pass1 = console.readPassword("Enter your new password: ");
             //char[] pass2 = console.readPassword("Re-enter your new password: ");
