@@ -1,6 +1,6 @@
-Which of the following is true for any reflexive relation R on a set A?|For every a in A, (a, a) must be in R.|If (a, b) is in R, then (b, a) must be in R|R contains no pairs (a, b) where a≠b.|If (a, b) is in R and (b, c) is in R, then (a, c) must be in R|EASY
-What does the symbol “::=” imply?|Declaration|End of Sentence|AND|Alternative|EASY
+Which of the following is true for any reflexive relation R on a set A?|For every a in A, (a, a) must be in R.|If (a, b) is in R, then (b, a) must be in R|R contains no pairs (a, b) where a≠b.|If (a, b) is in R and (b, c) is in R, then (a, c) must be in R|NOVICE
+What does the symbol “::=” imply?|Declaration|End of Sentence|AND|Alternative|NOVICE
 What is the function {[(¬t1 )](β)}’s Semantic Definition?|neg([t1](β))|conj (([t1](β)), ([t2](β))|disj (([t1](β)), ([t2](β))|None of the above|INTERMEDIATE
 A lattice is a partially ordered set in which every two elements have a least upper bound and a greatest lower bound. Which of the following properties does a lattice NOT necessarily satisfy?|Distributivity|Antisymmetry|Reflexivity|Completeness|INTERMEDIATE
-Which of the following characterizes a complete lattice?|Every subset has an infimum and supremum.|The lattice is finite.|Every element has a unique complement.|It is always distributive.|HARD
-Which of the following statements is true for a distributive lattice?|Every pair of elements has a supremum|Every element has a unique predecessor|Every pair of elements has a greatest common divisor|Every element has a unique complement|HARD
+Which of the following characterizes a complete lattice?|Every subset has an infimum and supremum.|The lattice is finite.|Every element has a unique complement.|It is always distributive.|EXPERT
+Which of the following statements is true for a distributive lattice?|Every pair of elements has a supremum|Every element has a unique predecessor|Every pair of elements has a greatest common divisor|Every element has a unique complement|EXPERT
