@@ -1,8 +1,10 @@
-package src;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
+
 
 /**
  * A class representing a user of the quiz, created after logging in.
@@ -38,6 +40,7 @@ public class User {
         BufferedReader reader;
         try {
             if (!historyFile.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 historyFile.createNewFile();
             }
             reader = new BufferedReader(new FileReader(historyFile));
@@ -55,26 +58,42 @@ public class User {
         return name;
     }
 
+
+    /**
+     * Returns a given statistic for the user.
+     * Valid statistics are:
+     * <pre>{@code
+     * MEAN
+     * MODE
+     * MEDIAN
+     * TOTAL_CORRECT
+     * TOTAL_ANSWERED}</pre>
+     * <p>
+     * To query standard deviation, use User.stdDev().
+     *
+     * @param stat The statistic to be queried
+     * @return The value of the queried statistic
+     */
     public double getStatistic(Statistic stat) {
-       // If user as never answered any questions
-       if (history.isEmpty()) return 0;
-       // How many rounds in total have been answered
-       int rounds = history.getOrDefault("Rounds", 0);
-       //noinspection unchecked
-       var map = (HashMap<String, Integer>) history.clone();
-       map.remove("Rounds");
-       List<Integer> corrects = history.values().stream()
-                                     .map(wrong -> rounds - wrong)
-                                     .collect(Collectors.toList());
+        // If user as never answered any questions
+        if (history.isEmpty()) return 0;
+        // How many rounds in total have been answered
+        int rounds = history.getOrDefault("Rounds", 0);
+        //noinspection unchecked
+        var map = (HashMap<String, Integer>) history.clone();
+        map.remove("Rounds");
+        List<Integer> corrects = history.values().stream()
+                .map(wrong -> rounds - wrong)
+                .collect(Collectors.toList());
         int totalCorrect = corrects.stream().reduce(0, Integer::sum);
-       switch (stat) {
+        switch (stat) {
             case MEAN:
                 return (double) totalCorrect / (rounds * history.size());
             case MEDIAN:
                 return (double) corrects.stream()
-                                    .sorted()
-                                    .collect(Collectors.toList())
-                                    .get(corrects.size() / 2) / rounds;
+                        .sorted()
+                        .collect(Collectors.toList())
+                        .get(corrects.size() / 2) / rounds;
             case TOTAL_CORRECT:
                 return totalCorrect;
             case TOTAL_ANSWERED:
@@ -84,18 +103,34 @@ public class User {
         }
     }
 
-    public static double stdDev() {
+    public static ArrayList<Double> allUserMeans() {
         File userDir = new File("GameData/UserHistory/");
         ArrayList<Double> means = new ArrayList<>();
         for (String name : Objects.requireNonNull(userDir.list())) {
             User user = new User(name.split("\\.")[0]);
             means.add(user.getStatistic(Statistic.MEAN));
         }
+        return means;
+    }
+
+    public static double stdDev() {
+        var means = allUserMeans();
         double mu = means.stream().reduce(0.0, Double::sum) / means.size();
         double xLessMuSquared = means.stream()
-                                     .reduce(0.0, (accum, x) -> accum + (x - mu) * (x - mu));
-
-        int n = Objects.requireNonNull(userDir.list()).length;
+                .reduce(0.0, (accum, x) -> accum + (x - mu) * (x - mu));
+        int n = means.size();
         return Math.sqrt(xLessMuSquared / n);
+    }
+
+    public static String leaderboard() {
+        File userDir = new File("GameData/UserHistory/");
+        TreeMap<String, Double> leaderboard = new TreeMap<>();
+        for (String name : Objects.requireNonNull(userDir.list())) {
+            User user = new User(name.split("\\.")[0]);
+            leaderboard.put(user.name(), user.getStatistic(Statistic.MEAN));
+        }
+        StringBuilder builder = new StringBuilder("User | Score");
+        leaderboard.forEach((name, score) -> builder.append(String.format("%s | %s", name, score)));
+        return builder.toString();
     }
 }
