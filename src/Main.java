@@ -145,6 +145,7 @@ public class Main {
         }
         //System.out.println("Welcome back to Quizzer!");
        // promptEnter();
+        DisplayTextWindow.launchWindow("Login Success!");
         return new User(user);
     }
 
@@ -180,18 +181,26 @@ public class Main {
             }
             //clearScreen();
             //System.out.println("Passwords must be the same.");
+            DisplayTextWindow.launchWindow("Passwords must be the same.");
         }
        // System.out.println("Success! Welcome to Quizzer!");
         //promptEnter();
+        DisplayTextWindow.launchWindow("Success! Welcome to Quizzer!");
         return new User(name);
     }
 
     public static void showStats(User user) {
-        clearScreen();
-        System.out.printf("Total Answered: %.0f%n", user.getStatistic(Statistic.TOTAL_ANSWERED));
-        System.out.printf("Total Correct: %.0f%n", user.getStatistic(Statistic.TOTAL_CORRECT));
-        System.out.printf("Mean: %.2f%n", user.getStatistic(Statistic.MEAN));
-        System.out.printf("Median: %.2f%n", user.getStatistic(Statistic.MEDIAN));
-        System.out.printf("StdDev: %.2f%n", User.stdDev());
+        double tot_ans=user.getStatistic(Statistic.TOTAL_ANSWERED);
+        double tot_cor=user.getStatistic(Statistic.TOTAL_CORRECT);
+        double avg=user.getStatistic(Statistic.MEAN);
+        double median=user.getStatistic(Statistic.MEDIAN);
+        double std_dev=User.stdDev();
+        String res="Total Answered: "+Double.toString(tot_ans)+"\nTotal Correct: "+Double.toString(tot_cor)+"\nMean: "+Double.toString(avg)+"\nMedian: "+Double.toString(median)+"\nStandard Deviation: "+Double.toString(std_dev)+"\n";
+        DisplayTextWindow.launchWindow(res);
+        //System.out.printf("Total Answered: %.0f%n", user.getStatistic(Statistic.TOTAL_ANSWERED));
+        //System.out.printf("Total Correct: %.0f%n", user.getStatistic(Statistic.TOTAL_CORRECT));
+        //System.out.printf("Mean: %.2f%n", user.getStatistic(Statistic.MEAN));
+        //System.out.printf("Median: %.2f%n", user.getStatistic(Statistic.MEDIAN));
+        //System.out.printf("StdDev: %.2f%n", User.stdDev());
     }
 }
