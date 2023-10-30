@@ -58,7 +58,7 @@ public class Quiz {
     /**
      * Asks all the questions in the given list.
      * <p>
-     * This should not be called by outside consumers,
+     * This cannot be called by outside consumers,
      * who should instead call a helper method that specifies the order to ask the questions in.
      *
      * @param questions The list of questions to be asked
