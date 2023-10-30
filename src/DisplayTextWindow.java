@@ -8,6 +8,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/*JavaFX Application that displays the text passed to it in Helvetica, size 48. Call with the following:
+*DisplayTextWindow.launchWindow("YOUR STRING HERE");
+*/
+
 public class DisplayTextWindow extends Application {
 
     private static String displayText = "Default Text";
