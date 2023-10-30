@@ -56,8 +56,14 @@ public class User {
     }
 
     public double getStatistic(Statistic stat) {
-        int rounds = history.get("Rounds");
-        List<Integer> corrects = history.values().stream()
+       // If user as never answered any questions
+       if (history.isEmpty()) return 0;
+       // How many rounds in total have been answered
+       int rounds = history.getOrDefault("Rounds", 0);
+       //noinspection unchecked
+       var map = (HashMap<String, Integer>) history.clone();
+       map.remove("Rounds");
+       List<Integer> corrects = history.values().stream()
                                      .map(wrong -> rounds - wrong)
                                      .collect(Collectors.toList());
         int totalCorrect = corrects.stream().reduce(0, Integer::sum);

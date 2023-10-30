@@ -61,7 +61,7 @@ public class PromptInput {
         vBox.setAlignment(Pos.CENTER);  // Align buttons in center
 
         for (int i = 0; i <= numChoices; i++) {
-            Button button = new Button(String.valueOf(i+1));
+            Button button = new Button(String.valueOf(i));
             int choice = i; // Capture the value for the lambda
             button.setOnAction(e -> {
                 result = choice;  // Store result
