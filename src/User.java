@@ -74,6 +74,8 @@ public class User {
      * @return The value of the queried statistic
      */
     public double getStatistic(Statistic stat) {
+        // If user as never answered any questions
+        if (history.isEmpty()) return 0;
         // How many rounds in total have been answered
         int rounds = history.getOrDefault("Rounds", 0);
         //noinspection unchecked
