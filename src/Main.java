@@ -145,6 +145,14 @@ public class Main {
         String user;
         clearScreen();
         Console console = System.console();
+        if (console == null) {
+            System.out.println("""
+                    You are running Quizzer from with an IDE.
+                    Debugging mode enabled.
+                    If you want the full experience, run Quizzer from a terminal.""");
+            promptEnter();
+            return new User("IDE");
+        }
         while (true) {
             clearScreen();
             user = console.readLine("Enter username: ");
