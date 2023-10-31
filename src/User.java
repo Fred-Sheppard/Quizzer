@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -31,17 +28,22 @@ public class User {
      *
      * @param name The user's username
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public User(String name) {
         this.name = name;
         historyFile = new File("GameData/UserHistory/" + name + ".txt");
+        if (!historyFile.exists()) {
+            historyFile.getParentFile().mkdirs();
+            try {
+                historyFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         BufferedReader reader;
         try {
-            if (!historyFile.exists()) {
-                //noinspection ResultOfMethodCallIgnored
-                historyFile.createNewFile();
-            }
             reader = new BufferedReader(new FileReader(historyFile));
-        } catch (IOException e) {
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
         history = new HashMap<>();
