@@ -203,6 +203,8 @@ public class Main {
         System.out.printf("Mean: %.2f%n", user.getStatistic(Statistic.MEAN));
         System.out.printf("Median: %.2f%n", user.getStatistic(Statistic.MEDIAN));
         System.out.printf("StdDev: %.2f%n", User.stdDev());
+        System.out.println();
+        System.out.println(User.leaderboard());
         promptEnter();
     }
 }

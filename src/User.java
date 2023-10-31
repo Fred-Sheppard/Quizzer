@@ -2,10 +2,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * A class representing a user of the quiz, created after logging in.
@@ -128,5 +125,24 @@ public class User {
             means.add(user.getStatistic(Statistic.MEAN));
         }
         return means;
+    }
+
+
+    /**
+     * Returns a String representation of a leaderboard, comparing users by their means.
+     *
+     * @return String leaderboard
+     */
+    public static String leaderboard() {
+        File userDir = new File("GameData/UserHistory/");
+        TreeMap<Double, String> leaderboard = new TreeMap<>();
+        for (String name : Objects.requireNonNull(userDir.list())) {
+            User user = new User(name.split("\\.")[0]);
+            leaderboard.put(user.getStatistic(Statistic.MEAN), user.name());
+        }
+        StringBuilder builder = new StringBuilder("User \t Score\n");
+        builder.append("---- \t -----\n");
+        leaderboard.descendingMap().forEach((score, name) -> builder.append(String.format("%s \t %.2f%n", name, score)));
+        return builder.toString();
     }
 }
