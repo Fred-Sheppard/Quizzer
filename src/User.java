@@ -1,3 +1,5 @@
+package src;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -112,7 +114,6 @@ public class User {
         }
         return means;
     }
-
     public static double stdDev() {
         var means = allUserMeans();
         double mu = means.stream().reduce(0.0, Double::sum) / means.size();
@@ -121,16 +122,20 @@ public class User {
         int n = means.size();
         return Math.sqrt(xLessMuSquared / n);
     }
-
+    /**
+     * Returns a String representation of a leaderboard, comparing users by their means.
+     *
+     * @return String leaderboard
+     */
     public static String leaderboard() {
         File userDir = new File("GameData/UserHistory/");
-        TreeMap<String, Double> leaderboard = new TreeMap<>();
+        TreeMap<Double, String> leaderboard = new TreeMap<>();
         for (String name : Objects.requireNonNull(userDir.list())) {
             User user = new User(name.split("\\.")[0]);
-            leaderboard.put(user.name(), user.getStatistic(Statistic.MEAN));
+            leaderboard.put(user.getStatistic(Statistic.MEAN), user.name());
         }
-        StringBuilder builder = new StringBuilder("User | Score");
-        leaderboard.forEach((name, score) -> builder.append(String.format("%s | %s", name, score)));
+        StringBuilder builder = new StringBuilder("User \t Score\n");
+        leaderboard.descendingMap().forEach((score, name) -> builder.append(String.format("%s \t %.2f%n", name, score)));
         return builder.toString();
     }
 }

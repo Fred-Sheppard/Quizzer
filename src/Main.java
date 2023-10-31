@@ -20,7 +20,7 @@ public class Main {
         String[] topics = loader.listTopics();
         // Login
         Login login = new Login(new File("GameData/users.txt"));
-        String loginPrompt ="Are you a new or existing user?\n(1) New\n(2) Existing";
+        String loginPrompt ="Are you a new or existing user?\n(0) New\n(1) Existing";
         PromptInput prompt = new PromptInput();
         boolean isExistingUser = prompt.display(loginPrompt, 1) == 1;
         User user;
@@ -35,8 +35,17 @@ public class Main {
         while (true) {
             int choice = chooseTopic(topics, scanner);
             if (choice == topics.length) {
-                showStats(user);
-                continue;
+                PromptInput Prompt = new PromptInput();
+                int response = Prompt.display("Choose one to display:\n(0) Leaderboard\n(1) Statistics",1);
+                if(response==0)
+                {String ldrboard = User.leaderboard();
+                 DisplayTextWindow.launchWindow(ldrboard);
+                 continue;
+                }
+                else if(response==1){
+                 showStats(user);
+                 continue;
+                }
             }
             Quiz quiz = new Quiz(topics[choice], user, loader, scanner);
             PromptInput Prompt = new PromptInput();
@@ -67,7 +76,7 @@ public class Main {
         for (int i = 0; i < options; i++) {
             builder.append(String.format("(%d) %s%n", i, topics[i]));
         }
-        builder.append(String.format("%n(%d) %s", options, "Show stats"));
+        builder.append(String.format("%n(%d) %s", options, "Show Stats/Leaderboard"));
         PromptInput prompt = new PromptInput();
         return prompt.display(builder.toString(), options);
     }
@@ -106,7 +115,6 @@ public class Main {
      * Clears the terminal
      */
     public static void clearScreen() {
-        System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
