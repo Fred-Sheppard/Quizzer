@@ -7,13 +7,12 @@ import java.util.Objects;
 
 public class QuestionLoader {
     private final File folder;
-    private final String FILE_EXTENSION = ".txt";
 
     public QuestionLoader(File folder) {
         if (!folder.isDirectory()) {
-            throw new InvalidDirectoryException("File is not a Directory");
+            throw new InvalidDirectoryException(String.format("File %s is not a Directory", folder));
         } else if (Objects.requireNonNull(folder.list()).length == 0) {
-            throw new InvalidDirectoryException("Directory is empty");
+            throw new InvalidDirectoryException(String.format("Directory %s is empty", folder));
         }
         this.folder = folder;
     }

@@ -9,9 +9,9 @@ import java.util.List;
 public class Question {
 
     public enum Difficulty {
-        EASY,
+        NOVICE,
         INTERMEDIATE,
-        HARD
+        EXPERT
     }
 
     private final String question;

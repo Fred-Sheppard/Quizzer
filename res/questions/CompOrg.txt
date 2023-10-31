@@ -1,0 +1,6 @@
+What does CPU stand for?|Central Processing Unit|Control and Processing Utility|Computer Performance Usage|Core Power Usage|NOVICE
+Who invented the finite state machine?|Alan Turing|Charles Babbage|Ada Lovelace|Konrad Zuse|NOVICE
+Which register is known as the link register?|r15|r1|r0|r31|INTERMEDIATE
+Where was the transistor invented?|Bell Labs|Analog Devices|Intel|Apple|INTERMEDIATE
+Convert 0xFE to binary:|11111110|254|11111101|11101101|EXPERT
+Convert 0b10101010 to octal|252|190|354|AA|EXPERT
