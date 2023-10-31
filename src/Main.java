@@ -35,16 +35,27 @@ public class Main {
 
         // Login
         Login login = new Login(new File("GameData/users.txt"));
+        User user;
         String loginPrompt = """
                 Are you a new or existing user?
                 (0) New
                 (1) Existing""";
-        boolean isExistingUser = promptInput(1, loginPrompt, scanner) == 1;
-        User user;
-        if (isExistingUser) {
-            user = promptLogin(login);
+        Console console = System.console();
+        // If the program is run from within an IDE
+        if (console == null) {
+            System.out.println("""
+                    You are running Quizzer from with an IDE.
+                    Debugging mode enabled.
+                    If you want the full experience, run Quizzer from a terminal.""");
+            promptEnter();
+            user = new User("IDE");
         } else {
-            user = promptCreateUser(login);
+            boolean isExistingUser = promptInput(1, loginPrompt, scanner) == 1;
+            if (isExistingUser) {
+                user = promptLogin(login);
+            } else {
+                user = promptCreateUser(login);
+            }
         }
 
         // Continuously ask questions
@@ -145,14 +156,6 @@ public class Main {
         String user;
         clearScreen();
         Console console = System.console();
-        if (console == null) {
-            System.out.println("""
-                    You are running Quizzer from with an IDE.
-                    Debugging mode enabled.
-                    If you want the full experience, run Quizzer from a terminal.""");
-            promptEnter();
-            return new User("IDE");
-        }
         while (true) {
             clearScreen();
             user = console.readLine("Enter username: ");
