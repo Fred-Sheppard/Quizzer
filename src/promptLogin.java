@@ -28,7 +28,7 @@ public class promptLogin {
 
     private String user;
     private String pass;
-    private int fontSize = 18;
+    private final int fontSize = 18;
 
     public String[] display() {
         Stage dialog = new Stage();

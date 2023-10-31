@@ -3,7 +3,6 @@ package src;
 import java.io.Console;
 import java.io.File;
 import java.util.Arrays;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,11 +15,10 @@ public class Main {
         clearScreen();
         // Welcome messages
         QuestionLoader loader = new QuestionLoader(new File("res/questions/"));
-        Scanner scanner = new Scanner(System.in);
         String[] topics = loader.listTopics();
         // Login
         Login login = new Login(new File("GameData/users.txt"));
-        String loginPrompt ="Are you a new or existing user?\n(0) New\n(1) Existing";
+        String loginPrompt = "Are you a new or existing user?\n(0) New\n(1) Existing";
         PromptInput prompt = new PromptInput();
         boolean isExistingUser = prompt.display(loginPrompt, 1) == 1;
         User user;
@@ -33,44 +31,43 @@ public class Main {
         // Continuously ask questions
         //noinspection InfiniteLoopStatement
         while (true) {
-            int choice = chooseTopic(topics, scanner);
+            int choice = chooseTopic(topics);
             if (choice == topics.length) {
                 PromptInput Prompt = new PromptInput();
-                int response = Prompt.display("Choose one to display:\n(0) Leaderboard\n(1) Statistics",1);
-                if(response==0)
-                {String ldrboard = User.leaderboard();
-                 DisplayTextWindow.launchWindow(ldrboard);
-                 continue;
-                }
-                else if(response==1){
-                 showStats(user);
-                 continue;
+                int response = Prompt.display("Choose one to display:\n(0) Leaderboard\n(1) Statistics", 1);
+                if (response == 0) {
+                    String leaderboard = User.leaderboard();
+                    DisplayTextWindow.launchWindow(leaderboard);
+                    continue;
+                } else if (response == 1) {
+                    showStats(user);
+                    continue;
                 }
             }
-            Quiz quiz = new Quiz(topics[choice], user, loader, scanner);
+            Quiz quiz = new Quiz(topics[choice], user, loader);
             PromptInput Prompt = new PromptInput();
-            int mode = Prompt.display("Choose a gamemode:\n(0) Random\n(1) Escalation\n(2) Redemption",2);
+            int mode = Prompt.display("Choose a gamemode:\n(0) Random\n(1) Escalation\n(2) Redemption", 2);
             switch (mode) {
                 case 0:
                     quiz.askRandom();
                     break;
-                case 1: 
+                case 1:
                     quiz.askEscalation();
                     break;
-                case 2 : 
+                case 2:
                     quiz.askRedemption();
                     break;
             }
         }
     }
+
     /**
      * Prompts the user to select a topic to be quizzed on
      *
-     * @param topics  The list of available topics
-     * @param scanner Scanner object to receive input
+     * @param topics The list of available topics
      * @return The user's choice
      */
-    public static int chooseTopic(String[] topics, Scanner scanner) {
+    public static int chooseTopic(String[] topics) {
         int options = topics.length;
         StringBuilder builder = new StringBuilder("Select a topic to begin:\n");
         for (int i = 0; i < options; i++) {
@@ -82,54 +79,11 @@ public class Main {
     }
 
     /**
-     * Repeatedly prompts the user for a valid numerical input.
-     * Valid inputs include any integer from 0 to `maxValid`, inclusive.
-     *
-     * @param maxValid The largest number input that is valid
-     * @param prompt   Prompt to display to the user displaying valid options
-     * @param input    Scanner object to receive input
-     */
-   
-    /* Use Code only for CLI
-    public static int promptInput(int maxValid, String prompt, Scanner input) {
-        while (true) {
-            clearScreen();
-            System.out.println(prompt);
-            System.out.printf("%n(%d) Exit%n", maxValid + 1);
-            System.out.print("Choice: ");
-            try {
-                // Parse this way to avoid infinite loops
-                int choice = Integer.parseInt(input.next());
-                // All prompts should include the option to exit
-                if (choice == maxValid + 1) System.exit(0);
-                // If the selection is valid
-                if (0 <= choice && choice <= maxValid) return choice;
-            } catch (NumberFormatException ignored) {
-                // If the input was not a number at all, keep looping
-            }
-        }
-    }
-    */
-
-    /**
      * Clears the terminal
      */
     public static void clearScreen() {
         System.out.flush();
     }
-
-    /**
-     * Pauses the app until the user presses the enter key
-     * Obsolete code only for CLI
-     */
-    /*public static void promptEnter() {
-        System.out.println("Press Enter to continue");
-        try {
-            //noinspection ResultOfMethodCallIgnored
-            System.in.read();
-        } catch (Exception ignored) {
-        }
-    }*/
 
     /**
      * Prompts the user to enter their username and password.
@@ -140,19 +94,13 @@ public class Main {
     public static User promptLogin(Login login) {
         String user;
         clearScreen();
-        Console console = System.console();
         while (true) {
             promptLogin loginPage = new promptLogin();
             String[] credentials = loginPage.display();
-            user=credentials[0];
-            String password=credentials[1];
-            //clearScreen();
-            //user = console.readLine("Enter username: ");
-            //var password = new String(console.readPassword("Enter password: "));
+            user = credentials[0];
+            String password = credentials[1];
             if (login.checkCredentials(user, password)) break;
         }
-        //System.out.println("Welcome back to Quizzer!");
-       // promptEnter();
         DisplayTextWindow.launchWindow("Login Success!");
         return new User(user);
     }
@@ -168,17 +116,12 @@ public class Main {
         // Loop while the passwords don't match or the username is already taken
         String name;
         String password;
-        Console console = System.console();
         while (true) {
-            CreateAccount ca=new CreateAccount();
+            CreateAccount ca = new CreateAccount();
             String[] accountDetails = ca.display();
-            String username=accountDetails[0];
-            char[] pass1=accountDetails[1].toCharArray();
-            char[] pass2=accountDetails[2].toCharArray();
-            //String username = console.readLine("Enter your new username: ");
-            //char[] pass1 = console.readPassword("Enter your new password: ");
-            //char[] pass2 = console.readPassword("Re-enter your new password: ");
-            //Commented out the parts of the code that use CLI
+            String username = accountDetails[0];
+            char[] pass1 = accountDetails[1].toCharArray();
+            char[] pass2 = accountDetails[2].toCharArray();
             // Assert the passwords are equal
             if (Arrays.equals(pass1, pass2)) {
                 name = username;
@@ -187,28 +130,19 @@ public class Main {
                 if (!login.createUser(name, password)) continue;
                 break;
             }
-            //clearScreen();
-            //System.out.println("Passwords must be the same.");
             DisplayTextWindow.launchWindow("Passwords must be the same.");
         }
-       // System.out.println("Success! Welcome to Quizzer!");
-        //promptEnter();
         DisplayTextWindow.launchWindow("Success! Welcome to Quizzer!");
         return new User(name);
     }
 
     public static void showStats(User user) {
-        double tot_ans=user.getStatistic(Statistic.TOTAL_ANSWERED);
-        double tot_cor=user.getStatistic(Statistic.TOTAL_CORRECT);
-        double avg=user.getStatistic(Statistic.MEAN);
-        double median=user.getStatistic(Statistic.MEDIAN);
-        double std_dev=User.stdDev();
-        String res="Total Answered: "+Double.toString(tot_ans)+"\nTotal Correct: "+Double.toString(tot_cor)+"\nMean: "+Double.toString(avg)+"\nMedian: "+Double.toString(median)+"\nStandard Deviation: "+Double.toString(std_dev)+"\n";
+        double tot_ans = user.getStatistic(Statistic.TOTAL_ANSWERED);
+        double tot_cor = user.getStatistic(Statistic.TOTAL_CORRECT);
+        double avg = user.getStatistic(Statistic.MEAN);
+        double median = user.getStatistic(Statistic.MEDIAN);
+        double std_dev = User.stdDev();
+        String res = "Total Answered: " + tot_ans + "\nTotal Correct: " + tot_cor + "\nMean: " + avg + "\nMedian: " + median + "\nStandard Deviation: " + std_dev + "\n";
         DisplayTextWindow.launchWindow(res);
-        //System.out.printf("Total Answered: %.0f%n", user.getStatistic(Statistic.TOTAL_ANSWERED));
-        //System.out.printf("Total Correct: %.0f%n", user.getStatistic(Statistic.TOTAL_CORRECT));
-        //System.out.printf("Mean: %.2f%n", user.getStatistic(Statistic.MEAN));
-        //System.out.printf("Median: %.2f%n", user.getStatistic(Statistic.MEDIAN));
-        //System.out.printf("StdDev: %.2f%n", User.stdDev());
     }
 }

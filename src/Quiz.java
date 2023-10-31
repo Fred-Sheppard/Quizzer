@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Scanner;
 
 /**
  * Class representing a quiz.
@@ -19,14 +18,12 @@ public class Quiz {
 
     private final String topic;
     private final ArrayList<Question> questions;
-    private final Scanner scanner;
     private final User user;
 
-    public Quiz(String topic, User user, QuestionLoader loader, Scanner scanner) {
+    public Quiz(String topic, User user, QuestionLoader loader) {
         this.topic = topic;
         this.user = user;
         questions = loader.getEntries(topic);
-        this.scanner = scanner;
     }
 
     /**
@@ -56,6 +53,7 @@ public class Quiz {
             return false;
         }
     }
+
     /**
      * Asks all the questions in the given list.
      * <p>
@@ -68,15 +66,15 @@ public class Quiz {
         Main.clearScreen();
         int numQuestions = questions.size();
         DisplayTextWindow.launchWindow("You have selected the " + topic + " topic.");
-        DisplayTextWindow.launchWindow("This topic contains"+numQuestions+"questions.\n");
+        DisplayTextWindow.launchWindow("This topic contains" + numQuestions + "questions.\n");
         int correct = 0;
         for (Question q : questions) {
             boolean userCorrect = askQuestion(q);
             if (userCorrect) correct++;
         }
         Main.clearScreen();
-        DisplayTextWindow.launchWindow("Quiz complete! You got "+correct+" out of"+numQuestions+" questions correct!\n Your percentage is "+((float) correct / (float) numQuestions * 100.0)+"%");
-                //correct, numQuestions, ((float) correct / (float) numQuestions * 100.0);
+        DisplayTextWindow.launchWindow("Quiz complete! You got " + correct + " out of" + numQuestions + " questions correct!\n Your percentage is " + ((float) correct / (float) numQuestions * 100.0) + "%");
+        //correct, numQuestions, ((float) correct / (float) numQuestions * 100.0);
         user.history.merge("Rounds", 1, Integer::sum);
         PrintWriter writer;
         try {
@@ -88,6 +86,7 @@ public class Quiz {
         writer.flush();
         writer.close();
     }
+
     /**
      * Sorts and asks the questions, placing the user's worst-answered questions first.
      */
@@ -97,6 +96,7 @@ public class Quiz {
                 .compareTo(user.history.getOrDefault(a.question(), 0)));
         askQuestions(questions);
     }
+
     /**
      * Asks the questions in a random order.
      */
@@ -104,6 +104,7 @@ public class Quiz {
         Collections.shuffle(questions);
         askQuestions(questions);
     }
+
     /**
      * Asks the questions in order of difficulty.
      */

@@ -23,13 +23,13 @@ import javafx.stage.Stage;
 
 public class PromptInput {
 
-    private int fontSize = 18;
-    private int result = 0; 
+    private final int fontSize = 18;
+    private int result = 0;
 
     public int display(String message, int numChoices) {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);  // Block other windows until this is closed
-        
+
         // Background color
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #d1e7ff;");
@@ -40,7 +40,7 @@ public class PromptInput {
         BorderPane.setAlignment(imageView, Pos.CENTER);
 
         // Display the string message on the left
-        Text labelText = new Text(message); 
+        Text labelText = new Text(message);
         labelText.setFont(new Font("Helvetica", fontSize)); // Font type and size
         root.setLeft(labelText);
         BorderPane.setMargin(labelText, new Insets(10));
@@ -52,7 +52,7 @@ public class PromptInput {
 
         dialog.setScene(new Scene(root, 400, 300));
         dialog.showAndWait();  // Block until closed
-        
+
         return result;  // Return result
     }
 

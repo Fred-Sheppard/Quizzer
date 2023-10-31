@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
 /* JavaFX Application that, when called, Displays a window with 3 fields, one for username, password, and re-entered password.
         CreateAccount ca=new CreateAccount();
         String[] accountDetails = ca.display();
@@ -28,7 +29,7 @@ public class CreateAccount {
     public String[] display() {
         Stage dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
-        
+
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #d1e7ff;");
 
@@ -80,6 +81,6 @@ public class CreateAccount {
         dialog.setScene(new Scene(root, 400, 300));
         dialog.showAndWait();
 
-        return new String[] { username, password, reEnteredPassword };
+        return new String[]{username, password, reEnteredPassword};
     }
 }
