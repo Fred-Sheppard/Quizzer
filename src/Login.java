@@ -12,8 +12,17 @@ public class Login {
      *
      * @param userFile File in which credentials are to be saved
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public Login(File userFile) {
         this.userFile = userFile;
+        if (!userFile.exists()) {
+            userFile.getParentFile().mkdirs();
+            try {
+                userFile.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
         map = new HashMap<>();
         BufferedReader reader;
         try {
