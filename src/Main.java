@@ -72,10 +72,13 @@ public class Main {
                     (0) Random
                     (1) Escalation
                     (2) Redemption""", scanner);
+            final int RANDOM = 0;
+            final int ESCALATION = 1;
+            final int REDEMPTION = 2;
             switch (mode) {
-                case 0 -> quiz.askRandom();
-                case 1 -> quiz.askEscalation();
-                case 2 -> quiz.askRedemption();
+                case RANDOM -> quiz.askRandom();
+                case ESCALATION -> quiz.askEscalation();
+                case REDEMPTION -> quiz.askRedemption();
                 default -> {
                 } //unreachable, since promptInput does not allow invalid inputs
             }
