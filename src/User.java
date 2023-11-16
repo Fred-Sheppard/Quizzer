@@ -32,6 +32,7 @@ public class User {
     public User(String name) {
         this.name = name;
         historyFile = new File("GameData/UserHistory/" + name + ".txt");
+        // If the file or any of the parent directories do not exist, create them
         if (!historyFile.exists()) {
             historyFile.getParentFile().mkdirs();
             try {
@@ -137,14 +138,21 @@ public class User {
      */
     public static String leaderboard() {
         File userDir = new File("GameData/UserHistory/");
+        // Use a TreeMap to sort the entries as they are entered
         TreeMap<Double, String> leaderboard = new TreeMap<>();
+        // Add all usernames to the TreeMap
+        // All users have a file named after them
         for (String name : Objects.requireNonNull(userDir.list())) {
             User user = new User(name.split("\\.")[0]);
+            // Place each user in the map, sorting them by their mean
             leaderboard.put(user.getStatistic(Statistic.MEAN), user.name());
         }
         StringBuilder builder = new StringBuilder("User \t Score\n");
         builder.append("---- \t -----\n");
-        leaderboard.descendingMap().forEach((score, name) -> builder.append(String.format("%s \t %.2f%n", name, score)));
+        // Sort descending, with the top score at the top of the leaderboard
+        leaderboard.descendingMap().forEach((score, name) ->
+                builder.append(String.format("%s \t %.2f%n", name, score)));
+        // Return a String to allow the caller to display the leaderboard as desired
         return builder.toString();
     }
 }
