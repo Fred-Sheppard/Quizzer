@@ -41,17 +41,18 @@ public class User {
                 throw new RuntimeException(e);
             }
         }
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(historyFile));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+        // Use a try-with block to automatically flush and close the file
+        try (BufferedReader reader = new BufferedReader(new FileReader(historyFile))) {
+            // Create a new HashMap to count the number of questions answered incorrectly by the user
+            history = new HashMap<>();
+            // <Question>|<Count> gets split into key and value, and is placed into the map
+            reader.lines().forEach(line -> {
+                String[] split = line.split("\\|");
+                history.put(split[0], Integer.parseInt(split[1]));
+            });
+        } catch (IOException e) {
+            throw new RuntimeException("Error reading user history file", e);
         }
-        history = new HashMap<>();
-        reader.lines().forEach(line -> {
-            String[] split = line.split("\\|");
-            history.put(split[0], Integer.parseInt(split[1]));
-        });
     }
 
     public String name() {

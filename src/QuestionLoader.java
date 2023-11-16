@@ -1,8 +1,13 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * Class to deal with loading questions from files.
@@ -34,13 +39,21 @@ public class QuestionLoader {
      * @return A map mapping questions to the correct answers
      */
     public ArrayList<Question> getEntries(String topic) {
-        String path = String.format("%s/%s.txt", folder.getAbsolutePath(), topic);
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(path));
-        } catch (FileNotFoundException e) {
-            System.out.printf("File %s could not be found", path);
-            System.exit(1);
+        // The path to the text file containing the questions
+        Path path = Paths.get(folder.getAbsolutePath(), topic + ".txt");
+        // Populate the list with entries from the question file
+        ArrayList<Question> list;
+        try (BufferedReader reader = new BufferedReader(new FileReader(path.toFile()))) {
+            // The Question constructor will handle parsing each line
+            // For each line in the file, create a new question from that line
+            // and place it into the list
+            list = reader.lines()
+                    .map(Question::new)
+                    .collect(Collectors.toCollection(ArrayList::new));
+        } catch (IOException e) {
+            // If the question cannot be loaded, there is an issue with file loading.
+            // The quiz will be unable to run, so we must exit
+            throw new InvalidDirectoryException(String.format("File %s could not be loaded", path));
         }
         return list;
     }
@@ -52,15 +65,13 @@ public class QuestionLoader {
      * @return Array of all available quiz topics
      */
     public String[] listTopics() {
-        String[] list = folder.list();
-        // We check the contents in the constructor, we know the folder contains valid files
-        @SuppressWarnings("DataFlowIssue")
-        String[] out = new String[list.length];
-        for (int i = 0; i < list.length; i++) {
-            String s = list[i].split("\\.")[0];
-            out[i] = s;
-        }
-        return out;
+        // Return a list of file names, minus the file extension
+        // e.g. Maths.txt -> Maths
+        // Folder is guaranteed to be non-empty in the constructor, so we can ignore null checks
+        //noinspection DataFlowIssue
+        return Arrays.stream((folder.listFiles()))
+                .map(file -> file.getName().split("\\.")[0])
+                .toArray(String[]::new);
     }
 
     /**

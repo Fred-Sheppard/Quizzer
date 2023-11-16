@@ -110,11 +110,15 @@ public class Quiz {
         }
         Main.clearScreen();
         System.out.printf("Quiz complete! You got %d out of %d questions correct! (%.0f%%)%n",
-                correct, numQuestions, (float) correct / (float) numQuestions * 100.0);
-        user.history.merge("Rounds", 1, Integer::sum);
-        PrintWriter writer;
-        try {
-            writer = new PrintWriter(new FileWriter(user.historyFile));
+                correct, numQuestions, percentage);
+        // Increment the number of rounds played in the user's history
+        user.getHistory().merge("Rounds", 1, Integer::sum);
+
+        // Write user's history to a file using Stream API
+        // Use a try-with block to automatically flush and close the file on finish
+        try (PrintWriter writer = new PrintWriter(new FileWriter(user.getHistoryFile()))) {
+            // Use a forEach loop to concisely print the data
+            user.getHistory().forEach((k, v) -> writer.println(k + "|" + v));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
