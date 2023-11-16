@@ -83,7 +83,13 @@ public class Question {
         return difficulty;
     }
 
-    public ArrayList<String> possibilities() {
+    /**
+     * All possible answers for this question.
+     * That is, all wrong answers plus the correct answer.
+     *
+     * @return List of possible answers
+     */
+    public List<String> possibilities() {
         ArrayList<String> list = new ArrayList<>(List.of(wrongs));
         list.add(answer);
         return list;
