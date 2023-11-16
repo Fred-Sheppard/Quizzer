@@ -48,6 +48,9 @@ public class Question {
     public Question(String line) {
         // Split the line by pipes
         String[] arr = line.split("\\|");
+        if (arr.length < 6) {
+            throw new IllegalArgumentException(String.format("Invalid line found when reading file:%n%s", line));
+        }
         question = arr[0];
         answer = arr[1];
         // The next 3 elements are the incorrect answers
