@@ -6,7 +6,7 @@ public class Tests {
 
     public static void testMean() {
         User user = initTestUser();
-        var history = user.history;
+        var history = user.getHistory();
         assert user.getStatistic(Statistic.MEAN) == 0.5;
         history.replace("1", 0);
         assert user.getStatistic(Statistic.MEAN) == 0.75;
@@ -20,7 +20,7 @@ public class Tests {
 
     public static void testMedian() {
         User user = initTestUser();
-        var history = user.history;
+        var history = user.getHistory();
         assert user.getStatistic(Statistic.MEDIAN) == 1.0;
         history.replace("3", 1);
         assert user.getStatistic(Statistic.MEDIAN) == 0.0;
@@ -30,7 +30,7 @@ public class Tests {
 
     public static User initTestUser() {
         User user = new User("test");
-        var history = user.history;
+        var history = user.getHistory();
         history.put("Rounds", 1);
         history.put("1", 1);
         history.put("2", 1);

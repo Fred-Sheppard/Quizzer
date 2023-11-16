@@ -67,7 +67,8 @@ public class Quiz {
         int answer = possibilities.indexOf(question.answer());
         StringBuilder builder = new StringBuilder(question.question());
         builder.append("\n");
-        for (int i = 0; i < 4; i++) {
+        // The number of available options for the user to select between
+        for (int i = 0; i < possibilities.size(); i++) {
             builder.append(String.format("(%d) %s%n", i, possibilities.get(i)));
         }
         // Tell the user to select their answer
@@ -109,6 +110,8 @@ public class Quiz {
             Main.promptEnter();
         }
         Main.clearScreen();
+        // Calculate the percentage of questions answered correctly
+        double percentage = (double) correct / (double) numQuestions * 100.0;
         System.out.printf("Quiz complete! You got %d out of %d questions correct! (%.0f%%)%n",
                 correct, numQuestions, percentage);
         // Increment the number of rounds played in the user's history
@@ -130,8 +133,10 @@ public class Quiz {
      */
     public void askRedemption() {
         // Sort by the values in the map
-        questions.sort((a, b) -> user.history.getOrDefault(b.question(), 0)
-                .compareTo(user.history.getOrDefault(a.question(), 0)));
+        // This places the questions with the most wrong answers at the start of the list
+        // If the question has no entry in the list, assume it has always been answered correctly
+        questions.sort((a, b) -> user.getHistory().getOrDefault(b.question(), 0)
+                .compareTo(user.getHistory().getOrDefault(a.question(), 0)));
         askQuestions(questions);
     }
 

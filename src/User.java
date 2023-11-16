@@ -1,4 +1,7 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -11,17 +14,19 @@ public class User {
      * Username of the user.
      */
     private final String name;
+
     /**
      * Map of all incorrectly answered questions,
      * along with how many times they have been answered incorrectly.
      * This is public to allow it to be edited directly by calling code.
      */
-    public HashMap<String, Integer> history;
+    private final HashMap<String, Integer> history;
+
     /**
      * File containing the user's question history.
      * Public to allow it to be written to directly by calling code.
      */
-    public final File historyFile;
+    private final File historyFile;
 
     /**
      * Creates a User with the given username.
@@ -156,4 +161,15 @@ public class User {
         // Return a String to allow the caller to display the leaderboard as desired
         return builder.toString();
     }
+
+    // Getters and Setters
+
+    public HashMap<String, Integer> getHistory() {
+        return history;
+    }
+
+    public File getHistoryFile() {
+        return historyFile;
+    }
+
 }

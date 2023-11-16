@@ -75,6 +75,7 @@ public class Question {
         return answer;
     }
 
+    @SuppressWarnings("unused")
     public String[] wrongs() {
         return wrongs;
     }
