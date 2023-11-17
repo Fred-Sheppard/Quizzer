@@ -117,35 +117,61 @@ public class Quiz {
         // Increment the number of rounds played in the user's history
         user.getHistory().merge("Rounds", 1, Integer::sum);
 
-        // Write user's history to a file using Stream API
-        // Use a try-with block to automatically flush and close the file on finish
-        try (PrintWriter writer = new PrintWriter(new FileWriter(user.getHistoryFile()))) {
-            // Use a forEach loop to concisely print the data
-            user.getHistory().forEach((k, v) -> writer.println(k + "|" + v));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        Main.promptEnter();
+    public String topic() {
+        return topic;
+    }
+}
+
+/**
+ * Asks the questions in a random order.
+ */
+class RandomQuiz extends Quiz {
+
+    public RandomQuiz(String topic, User user, QuestionLoader loader, UI ui) {
+        super(topic, user, loader, ui);
     }
 
-    /**
-     * Sorts and asks the questions, placing the user's worst-answered questions first.
-     */
-    public void askRedemption() {
+    @Override
+    public int askQuestions() {
+        Collections.shuffle(questions);
+        return super.askQuestions();
+    }
+}
+
+/**
+ * Asks the questions in order of difficulty.
+ */
+class EscalationQuiz extends Quiz {
+
+    public EscalationQuiz(String topic, User user, QuestionLoader loader, UI ui) {
+        super(topic, user, loader, ui);
+    }
+
+    @Override
+    public int askQuestions() {
+        // Sort the questions by difficulty
+        questions.sort(Comparator.comparing(Question::difficulty));
+        return super.askQuestions();
+    }
+}
+
+/**
+ * Sorts and asks the questions, placing the user's worst-answered questions first.
+ */
+class RedemptionQuiz extends Quiz {
+
+    public RedemptionQuiz(String topic, User user, QuestionLoader loader, UI ui) {
+        super(topic, user, loader, ui);
+    }
+
+    @Override
+    public int askQuestions() {
         // Sort by the values in the map
         // This places the questions with the most wrong answers at the start of the list
         // If the question has no entry in the list, assume it has always been answered correctly
         questions.sort((a, b) -> user.getHistory().getOrDefault(b.question(), 0)
                 .compareTo(user.getHistory().getOrDefault(a.question(), 0)));
-        askQuestions(questions);
-    }
-
-    /**
-     * Asks the questions in a random order.
-     */
-    public void askRandom() {
-        Collections.shuffle(questions);
-        askQuestions(questions);
+        return super.askQuestions();
     }
 
     /**
