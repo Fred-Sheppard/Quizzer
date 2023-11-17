@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -46,17 +43,33 @@ public class User {
                 throw new RuntimeException(e);
             }
         }
+        history = (HashMap<String, Integer>) updateHistoryFromFile();
+    }
+
+    public Map<String, Integer> updateHistoryFromFile() {
         // Use a try-with block to automatically flush and close the file
+        Map<String, Integer> map = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(historyFile))) {
             // Create a new HashMap to count the number of questions answered incorrectly by the user
-            history = new HashMap<>();
             // <Question>|<Count> gets split into key and value, and is placed into the map
             reader.lines().forEach(line -> {
                 String[] split = line.split("\\|");
-                history.put(split[0], Integer.parseInt(split[1]));
+                map.put(split[0], Integer.parseInt(split[1]));
             });
         } catch (IOException e) {
             throw new RuntimeException("Error reading user history file", e);
+        }
+        return map;
+    }
+
+    public void updateFile() {
+        // Write user's history to a file using Stream API
+        // Use a try-with block to automatically flush and close the file on finish
+        try (PrintWriter writer = new PrintWriter(new FileWriter(historyFile))) {
+            // Use a forEach loop to concisely print the data
+            getHistory().forEach((k, v) -> writer.println(k + "|" + v));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -167,9 +180,4 @@ public class User {
     public HashMap<String, Integer> getHistory() {
         return history;
     }
-
-    public File getHistoryFile() {
-        return historyFile;
-    }
-
 }
