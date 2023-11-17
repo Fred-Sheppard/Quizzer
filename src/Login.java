@@ -45,13 +45,13 @@ public class Login {
      */
     public boolean createUser(String user, String password) {
         if (map.containsKey(user)) {
-            System.out.println("User already exists.");
-            Main.promptEnter();
             return false;
         }
+        // Hash the password using the default Java hashcode
         int hashedPassword = password.hashCode();
+        // Append the new username and password to the file
         try (FileWriter writer = new FileWriter(userFile, true)) {
-            writer.write(user + "," + hashedPassword + "\n");
+            writer.write(String.format("%s,%d%n", user, hashedPassword));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -63,20 +63,26 @@ public class Login {
      *
      * @param user     The username of the user
      * @param password The password of the user
-     * @return If the login was successful
      */
-    public boolean checkCredentials(String user, String password) {
+    public void checkCredentials(String user, String password) {
         String hashedPass = String.valueOf(password.hashCode());
         if (!map.containsKey(user)) {
-            System.out.println("Username not found");
-            Main.promptEnter();
-            return false;
+            throw new UserNotFoundError(String.format("User %s could not be found", user));
         }
         if (!map.get(user).equals(hashedPass)) {
-            System.out.println("Incorrect password");
-            Main.promptEnter();
-            return false;
+            throw new IncorrectPasswordError("Password was incorrect for the given user");
         }
-        return true;
+    }
+
+    static class UserNotFoundError extends Error {
+        public UserNotFoundError(String message) {
+            super(message);
+        }
+    }
+
+    static class IncorrectPasswordError extends Error {
+        public IncorrectPasswordError(String message) {
+            super(message);
+        }
     }
 }

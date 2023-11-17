@@ -1,5 +1,6 @@
 import java.io.Console;
 import java.io.File;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class CLI implements UI {
@@ -43,7 +44,7 @@ public class CLI implements UI {
         String[] topics = loader.listTopics();
 
         // Login
-//        Login login = new Login(new File("GameData/users.txt"));
+        Login login = new Login(new File("GameData/users.txt"));
         User user;
         String loginPrompt = """
                 Are you a new or existing user?
@@ -59,12 +60,11 @@ public class CLI implements UI {
             promptEnter();
             user = new User("IDE");
         } else {
-            user = new User("null");
             boolean isExistingUser = promptInput(1, loginPrompt) == 1;
             if (isExistingUser) {
-//                user = promptLogin(login);
+                user = promptLogin(login);
             } else {
-//                user = promptCreateUser(login);
+                user = promptCreateUser(login);
             }
         }
 
@@ -172,52 +172,65 @@ public class CLI implements UI {
      *
      * @param login The login object to use
      */
-//    public User promptLogin(Login login) {
-//        String user;
-//        clearScreen();
-//        Console console = System.console();
-//        while (true) {
-//            clearScreen();
-//            user = console.readLine("Enter username: ");
-//            var password = new String(console.readPassword("Enter password: "));
-//            if (login.checkCredentials(user, password)) break;
-//        }
-//        System.out.println("Welcome back to Quizzer!");
-//        promptEnter();
-//        return new User(user);
-//    }
+    public User promptLogin(Login login) {
+        String user;
+        clearScreen();
+        Console console = System.console();
+        while (true) {
+            clearScreen();
+            user = console.readLine("Enter username: ");
+            var password = new String(console.readPassword("Enter password: "));
+            try {
+                login.checkCredentials(user, password);
+            } catch (Login.UserNotFoundError e) {
+                System.out.println("Username not found");
+                continue;
+            } catch (Login.IncorrectPasswordError e) {
+                System.out.println("Incorrect password for the given username");
+                continue;
+            }
+            // If no errors, then the credentials were okay
+            break;
+        }
+        System.out.println("Welcome back to Quizzer!");
+        promptEnter();
+        return new User(user);
+    }
 
     /**
      * Prompts the user to create a new account.
      * Will loop until it succeeds.
      *
-//     * @param login The login object to use
+     * @param login The login object to use
      */
-//    public User promptCreateUser(Login login) {
-//        clearScreen();
-//        // Loop while the passwords don't match or the username is already taken
-//        String name;
-//        String password;
-//        Console console = System.console();
-//        while (true) {
-//            String username = console.readLine("Enter your new username: ");
-//            char[] pass1 = console.readPassword("Enter your new password: ");
-//            char[] pass2 = console.readPassword("Re-enter your new password: ");
-//            // Assert the passwords are equal
-//            if (Arrays.equals(pass1, pass2)) {
-//                name = username;
-//                password = new String(pass1);
-//                // Loop if the user could not be created
-//                if (!login.createUser(name, password)) continue;
-//                break;
-//            }
-//            clearScreen();
-//            System.out.println("Passwords must be the same.");
-//        }
-//        System.out.println("Success! Welcome to Quizzer!");
-//        promptEnter();
-//        return new User(name);
-//    }
+    public User promptCreateUser(Login login) {
+        clearScreen();
+        // Loop while the passwords don't match or the username is already taken
+        String name;
+        String password;
+        Console console = System.console();
+        while (true) {
+            String username = console.readLine("Enter your new username: ");
+            char[] pass1 = console.readPassword("Enter your new password: ");
+            char[] pass2 = console.readPassword("Re-enter your new password: ");
+            // Assert the passwords are equal
+            if (Arrays.equals(pass1, pass2)) {
+                name = username;
+                password = new String(pass1);
+                // Loop if the user could not be created
+                if (login.createUser(name, password)) {
+                    break;
+                }
+                System.out.println("User already exists");
+                promptEnter();
+            }
+            clearScreen();
+            System.out.println("Passwords must be the same.");
+        }
+        System.out.println("Success! Welcome to Quizzer!");
+        promptEnter();
+        return new User(name);
+    }
 
     public void showStats(User user) {
         clearScreen();
