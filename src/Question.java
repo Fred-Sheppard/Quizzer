@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -33,6 +34,11 @@ public class Question {
      */
     private final String[] wrongs;
     /**
+     * List of answers, both right and wrong.
+     * This should usually be shuffled by shufflePossibilities() before accessing it.
+     */
+    private final ArrayList<String> possibilities;
+    /**
      * The difficulty of the question being asked.
      */
     private final Difficulty difficulty;
@@ -43,7 +49,7 @@ public class Question {
      * <p>
      * Question|Answer|Wrong1|Wrong2|Wrong3|Difficulty
      *
-     * @param line The String formatted as above, from which the question if read
+     * @param line The String formatted as above, from which the question is read
      */
     public Question(String line) {
         // Split the line by pipes
@@ -55,14 +61,11 @@ public class Question {
         answer = arr[1];
         // The next 3 elements are the incorrect answers
         wrongs = Arrays.copyOfRange(arr, 2, 5);
+        possibilities = new ArrayList<>(Arrays.asList(wrongs));
+        possibilities.add(answer);
         difficulty = Difficulty.valueOf(arr[5]);
     }
 
-    /**
-     * Format the question for printing.
-     *
-     * @return String representation of the Question
-     */
     public String toString() {
         return String.format("[Q: %s. A: %s. W: %s. D: %s]", question, answer, Arrays.toString(wrongs), difficulty);
     }
@@ -71,6 +74,7 @@ public class Question {
         return question;
     }
 
+    @SuppressWarnings("unused")
     public String answer() {
         return answer;
     }
@@ -91,8 +95,21 @@ public class Question {
      * @return List of possible answers
      */
     public List<String> possibilities() {
-        ArrayList<String> list = new ArrayList<>(List.of(wrongs));
-        list.add(answer);
-        return list;
+        return possibilities;
+    }
+
+    /**
+     * Shuffles the internal list of possible answers.
+     * <p>
+     * In most cases (but not all - you may want the original list),
+     * this should be called before calling possibilities(),
+     * so that the answer is not simply the final entry.
+     */
+    public void shufflePossibilities() {
+        Collections.shuffle(possibilities);
+    }
+
+    public int correctIndex() {
+        return possibilities().indexOf(answer);
     }
 }
