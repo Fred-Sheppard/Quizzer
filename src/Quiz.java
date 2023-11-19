@@ -26,6 +26,9 @@ public abstract class Quiz {
      * Quiz results will be written to this user's statistics.
      */
     protected final User user;
+    /**
+     * The UI object that will display this quiz.
+     */
     private final UI ui;
 
     /**
@@ -51,35 +54,29 @@ public abstract class Quiz {
      * @return If the user selected the correct answer
      */
     private boolean askQuestion(Question question) {
-        // All wrong answers, plus the correct answer
-        List<String> possibilities = question.possibilities();
-        // Each time a question is asked, the order should be unique
-        Collections.shuffle(possibilities);
-        // Find which answer (0-3) is the correct one
-        // This will be used later to check if they chose correctly
-        int answer = possibilities.indexOf(question.answer());
-        if (ui.askQuestion(question, answer)) {
+        // Check if the user answered correctly
+        if (ui.askQuestion(question)) {
             // If the question has never been answered by this user, it will not exist in the user history
             // If this is the case, place a zero
             user.getHistory().putIfAbsent(question.question(), 0);
             return true;
         } else {
-            // Increment the value in the map by 1
+            // If they answer incorrectly, increment that question's counter in the user history
             user.getHistory().merge(question.question(), 1, Integer::sum);
             return false;
         }
     }
 
+    /**
+     * Ask all the questions in the sorted/shuffled list,
+     * keeping track of the amount answered correctly
+     *
+     * @return The number of correctly-answered questions
+     */
     protected int askQuestions() {
-        // Ask all the questions in the sorted/shuffled list,
-        // keeping track of the amount answered correctly
-//        int correct = 0;
-//        for (Question q : questions) {
-//            boolean userCorrect = askQuestion(q);
-//            if (userCorrect) correct++;
-//        }
+        // Ask all questions, keeping track of the amount answered correctly
         int correct = (int) questions.stream().filter(this::askQuestion).count();
-        // Increment the number of rounds played in the user's history
+        // Increment the number of rounds played in the user's history once all questions have been asked
         user.getHistory().merge("Rounds", 1, Integer::sum);
         user.updateFile();
         return correct;
@@ -91,7 +88,7 @@ public abstract class Quiz {
 }
 
 /**
- * Asks the questions in a random order.
+ * Quiz type that asks the questions in a random order.
  */
 class RandomQuiz extends Quiz {
 
@@ -107,7 +104,7 @@ class RandomQuiz extends Quiz {
 }
 
 /**
- * Asks the questions in order of difficulty.
+ * Quiz type that asks the questions in order of difficulty.
  */
 class EscalationQuiz extends Quiz {
 
@@ -124,7 +121,7 @@ class EscalationQuiz extends Quiz {
 }
 
 /**
- * Sorts and asks the questions, placing the user's worst-answered questions first.
+ * Quiz type that asks the questions by placing the user's worst-asked questions first.
  */
 class RedemptionQuiz extends Quiz {
 

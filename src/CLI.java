@@ -15,6 +15,9 @@ public class CLI implements UI {
             | |  | | |  | | | |   / /   / / |  __| |  _  /
             | |__| | |__| |_| |_ / /__ / /__| |____| | \\ \\
              \\___\\_\\\\____/|_____/_____/_____|______|_|  \\_\\""";
+    /**
+     * Scanner to be used to take in user input
+     */
     private Scanner scanner;
 
     public CLI() {
@@ -25,6 +28,9 @@ public class CLI implements UI {
         new CLI().run();
     }
 
+    /**
+     * Run the CLI application
+     */
     public void run() {
         // TODO use from jar file, maybe encryption library?
         // Print message when the program closes, even unexpectedly
@@ -49,8 +55,9 @@ public class CLI implements UI {
         // Continuously ask questions
         //noinspection InfiniteLoopStatement
         while (true) {
-            int choice = chooseTopic(topics);
-            if (choice == topics.length) {
+            int topic = chooseTopic(topics);
+            // For n topics, choosing n+1 will display user stats
+            if (topic == topics.length) {
                 showStats(user);
                 continue;
             }
@@ -136,7 +143,7 @@ public class CLI implements UI {
      * Repeatedly prompts the user for a valid numerical input.
      * Valid inputs include any integer from 0 to `maxValid`, inclusive.
      *
-     * @param maxValid The largest number input that is valid
+     * @param maxValid The largest numerical input that is valid
      * @param prompt   Prompt to display to the user displaying valid options
      */
     public int promptInput(int maxValid, String prompt) {
@@ -188,6 +195,7 @@ public class CLI implements UI {
         String user;
         clearScreen();
         Console console = System.console();
+        // Keep looping until valid credentials are entered
         while (true) {
             clearScreen();
             user = console.readLine("Enter username: ");
@@ -249,6 +257,11 @@ public class CLI implements UI {
         return new User(name);
     }
 
+    /**
+     * Show the statistics for the current user, along with the leaderboard of all users.
+     *
+     * @param user The user to display stats for
+     */
     public void showStats(User user) {
         clearScreen();
         System.out.printf("Total Answered: %.0f%n", user.getStatistic(Statistic.TOTAL_ANSWERED));
@@ -261,22 +274,36 @@ public class CLI implements UI {
         promptEnter();
     }
 
-    public boolean askQuestion(Question question, int answer) {
+    /**
+     * Pose the given question to the user for answering.
+     *
+     * @param question The question to be asked
+     * @return If the user answered the question correctly
+     */
+    public boolean askQuestion(Question question) {
         clearScreen();
+        // We don't each question to appear with the same order each time
+        question.shufflePossibilities();
         StringBuilder builder = new StringBuilder(question.question());
         builder.append("\n");
+        /*
+         Print in the following format:
+         (0) Who invented...
+         (1) What is...
+        */
         // The number of available options for the user to select between
         for (int i = 0; i < question.possibilities().size(); i++) {
-            builder.append(String.format("(%d) %s%n", i, question.possibilities().get(i)));
+            String thisQuestion = question.possibilities().get(i);
+            builder.append(String.format("(%d) %s%n", i, thisQuestion));
         }
         // Tell the user to select their answer
         int choice = promptInput(3, builder.toString());
-        if (choice == answer) {
+        if (choice == question.correctIndex()) {
             System.out.println("Correct! Well done.");
             promptEnter();
             return true;
         } else {
-            System.out.println("Sorry. The correct answer was " + answer);
+            System.out.println("Sorry. The correct answer was " + question.correctIndex());
             promptEnter();
             return false;
         }
