@@ -33,3 +33,4 @@ GameData/
 .idea/
 /qodana.yaml
 lib
+/src/META-INF/
