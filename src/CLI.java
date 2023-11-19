@@ -264,11 +264,12 @@ public class CLI implements UI {
      */
     public void showStats(User user) {
         clearScreen();
-        System.out.printf("Total Answered: %.0f%n", user.getStatistic(Statistic.TOTAL_ANSWERED));
-        System.out.printf("Total Correct: %.0f%n", user.getStatistic(Statistic.TOTAL_CORRECT));
-        System.out.printf("Mean: %.2f%n", user.getStatistic(Statistic.MEAN));
-        System.out.printf("Median: %.2f%n", user.getStatistic(Statistic.MEDIAN));
-        System.out.printf("StdDev: %.2f%n", User.stdDev());
+        System.out.printf("User: %s%n%n", user);
+        System.out.printf("Answered:\t%.0f%n", user.getStatistic(Statistic.TOTAL_ANSWERED));
+        System.out.printf("Correct:\t%.0f%n", user.getStatistic(Statistic.TOTAL_CORRECT));
+        System.out.printf("Mean:\t\t%.2f%n", user.getStatistic(Statistic.MEAN));
+        System.out.printf("Median:\t\t%.2f%n", user.getStatistic(Statistic.MEDIAN));
+        System.out.printf("StdDev:\t\t%.2f%n", User.stdDev());
         System.out.println();
         System.out.println(User.leaderboard());
         promptEnter();

@@ -73,6 +73,10 @@ public class User {
         }
     }
 
+    public String toString() {
+        return name;
+    }
+
     public String name() {
         return name;
     }
