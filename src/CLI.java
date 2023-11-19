@@ -44,12 +44,53 @@ public class CLI implements UI {
         String[] topics = loader.listTopics();
 
         // Login
+        User user = login();
+
+        // Continuously ask questions
+        //noinspection InfiniteLoopStatement
+        while (true) {
+            int choice = chooseTopic(topics);
+            if (choice == topics.length) {
+                showStats(user);
+                continue;
+            }
+            Quiz quiz = chooseQuiz(topics[topic], user, loader);
+            playQuiz(quiz);
+        }
+    }
+
+    private Quiz chooseQuiz(String topic, User user, QuestionLoader loader) {
+        int mode = promptInput(2, """
+                Choose a gamemode:
+                (0) Random
+                (1) Escalation
+                (2) Redemption""");
+        final int RANDOM = 0;
+        final int ESCALATION = 1;
+        final int REDEMPTION = 2;
+        return switch (mode) {
+            case RANDOM -> new RandomQuiz(topic, user, loader, this);
+            case ESCALATION -> new EscalationQuiz(topic, user, loader, this);
+            case REDEMPTION -> new RedemptionQuiz(topic, user, loader, this);
+            default -> null; //unreachable, since promptInput does not allow invalid inputs
+        };
+    }
+
+    private void playQuiz(Quiz quiz) {
+        clearScreen();
+        int numQuestions = quiz.questions.size();
+        System.out.printf("You have selected the %s topic.%n", quiz.topic());
+        System.out.printf("This topic contains %d questions.%n", numQuestions);
+        promptEnter();
+        int correct = quiz.askQuestions();
+        double percentage = (double) correct / (double) numQuestions;
+        System.out.printf("Quiz complete! You got %d out of %d questions correct! (%.0f%%)%n",
+                correct, numQuestions, percentage);
+    }
+
+    private User login() {
         Login login = new Login(new File("GameData/users.txt"));
         User user;
-        String loginPrompt = """
-                Are you a new or existing user?
-                (0) New
-                (1) Existing""";
         Console console = System.console();
         // If the program is run from within an IDE
         if (console == null) {
@@ -60,6 +101,11 @@ public class CLI implements UI {
             promptEnter();
             user = new User("IDE");
         } else {
+            // Ask the user if they they are a new or existing user
+            String loginPrompt = """
+                    Are you a new or existing user?
+                    (0) New
+                    (1) Existing""";
             boolean isExistingUser = promptInput(1, loginPrompt) == 1;
             if (isExistingUser) {
                 user = promptLogin(login);
@@ -67,41 +113,7 @@ public class CLI implements UI {
                 user = promptCreateUser(login);
             }
         }
-
-        // Continuously ask questions
-        //noinspection InfiniteLoopStatement
-        while (true) {
-            int choice = chooseTopic(topics);
-            if (choice == topics.length) {
-                showStats(user);
-                continue;
-            }
-            int mode = promptInput(2, """
-                    Choose a gamemode:
-                    (0) Random
-                    (1) Escalation
-                    (2) Redemption""");
-            final int RANDOM = 0;
-            final int ESCALATION = 1;
-            final int REDEMPTION = 2;
-            Quiz quiz = switch (mode) {
-                case RANDOM -> new RandomQuiz(topics[choice], user, loader, this);
-                case ESCALATION -> new EscalationQuiz(topics[choice], user, loader, this);
-                case REDEMPTION -> new RedemptionQuiz(topics[choice], user, loader, this);
-                default -> null; //unreachable, since promptInput does not allow invalid inputs
-            };
-            // Todo fix this
-            assert quiz != null;
-            clearScreen();
-            int numQuestions = quiz.questions.size();
-            System.out.printf("You have selected the %s topic.%n", quiz.topic());
-            System.out.printf("This topic contains %d questions.%n", numQuestions);
-            promptEnter();
-            int correct = quiz.askQuestions();
-            double percentage = (double) correct / (double) numQuestions;
-            System.out.printf("Quiz complete! You got %d out of %d questions correct! (%.0f%%)%n",
-                    correct, numQuestions, percentage);
-        }
+        return user;
     }
 
     /**
@@ -184,9 +196,11 @@ public class CLI implements UI {
                 login.checkCredentials(user, password);
             } catch (Login.UserNotFoundError e) {
                 System.out.println("Username not found");
+                promptEnter();
                 continue;
             } catch (Login.IncorrectPasswordError e) {
                 System.out.println("Incorrect password for the given username");
+                promptEnter();
                 continue;
             }
             // If no errors, then the credentials were okay
@@ -214,18 +228,21 @@ public class CLI implements UI {
             char[] pass1 = console.readPassword("Enter your new password: ");
             char[] pass2 = console.readPassword("Re-enter your new password: ");
             // Assert the passwords are equal
-            if (Arrays.equals(pass1, pass2)) {
-                name = username;
-                password = new String(pass1);
-                // Loop if the user could not be created
-                if (login.createUser(name, password)) {
-                    break;
-                }
+            if (!Arrays.equals(pass1, pass2)) {
+                clearScreen();
+                System.out.println("Passwords must be the same.");
+                promptEnter();
+                continue;
+            }
+            name = username;
+            password = new String(pass1);
+            // Loop if the user could not be created
+            if (!login.createUser(name, password)) {
                 System.out.println("User already exists");
                 promptEnter();
+            } else {
+                break;
             }
-            clearScreen();
-            System.out.println("Passwords must be the same.");
         }
         System.out.println("Success! Welcome to Quizzer!");
         promptEnter();
