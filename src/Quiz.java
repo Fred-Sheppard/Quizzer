@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * Class representing a quiz.
@@ -32,8 +31,6 @@ public abstract class Quiz {
     private final UI ui;
 
     /**
-     * Constructor for the Quiz class.
-     *
      * @param topic  The topic of the quiz.
      * @param user   The user taking the quiz.
      * @param loader The question loader to load questions for the specified topic.
@@ -134,8 +131,11 @@ class RedemptionQuiz extends Quiz {
         // Sort by the values in the map
         // This places the questions with the most wrong answers at the start of the list
         // If the question has no entry in the list, assume it has always been answered correctly
-        questions.sort((a, b) -> user.getHistory().getOrDefault(b.question(), 0)
-                .compareTo(user.getHistory().getOrDefault(a.question(), 0)));
+        System.out.println(user.getHistory());
+        questions.sort(Comparator.<Question>comparingInt(
+                question -> user
+                        .getHistory()
+                        .getOrDefault(question.question(), 0)).reversed());
         return super.askQuestions();
     }
 }
