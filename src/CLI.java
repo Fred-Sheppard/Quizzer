@@ -8,13 +8,14 @@ public class CLI implements UI {
     /**
      * ASCII font of the Quizzer logo
      */
-    private final String QUIZZER = """
+    private static final String QUIZZER = """
               ____  _    _ _____ __________________ _____
             /  __ \\| |  | |_   _|___  /___  /  ____|  __ \\
             | |  | | |  | | | |    / /   / /| |__  | |__) |
             | |  | | |  | | | |   / /   / / |  __| |  _  /
             | |__| | |__| |_| |_ / /__ / /__| |____| | \\ \\
              \\___\\_\\\\____/|_____/_____/_____|______|_|  \\_\\""";
+    private String PATH;
     /**
      * Scanner to be used to take in user input
      */
@@ -32,7 +33,6 @@ public class CLI implements UI {
      * Run the CLI application
      */
     public void run() {
-        // TODO use from jar file, maybe encryption library?
         // Print message when the program closes, even unexpectedly
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             clearScreen();
@@ -40,12 +40,14 @@ public class CLI implements UI {
             System.out.println(QUIZZER);
         }));
 
+        PATH = getPath();
+
         clearScreen();
         // Welcome messages
         System.out.println(QUIZZER);
         System.out.println("Welcome to Quizzer!");
         promptEnter();
-        QuestionLoader loader = new QuestionLoader(new File("res/questions/"));
+        QuestionLoader loader = new QuestionLoader(new File(PATH + "questions/"));
         scanner = new Scanner(System.in);
         String[] topics = loader.listTopics();
 
@@ -64,6 +66,19 @@ public class CLI implements UI {
             Quiz quiz = chooseQuiz(topics[topic], user, loader);
             playQuiz(quiz);
         }
+    }
+
+    private String getPath() {
+        String path;
+        File jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+        if (jarPath.toString().endsWith(".jar")) {
+            // If being run from a jar file
+            path = jarPath.getParentFile().getAbsolutePath() + "/";
+        } else {
+            // Run from inside IDE
+            path = "";
+        }
+        return path;
     }
 
     private Quiz chooseQuiz(String topic, User user, QuestionLoader loader) {
@@ -96,7 +111,7 @@ public class CLI implements UI {
     }
 
     private User login() {
-        Login login = new Login(new File("GameData/users.txt"));
+        Login login = new Login(new File(PATH + "GameData/users.txt"));
         User user;
         Console console = System.console();
         // If the program is run from within an IDE
