@@ -3,18 +3,25 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * Runs the quiz from the CLI.
+ * Question files must be placed in the same directory as the jar/class file of the quiz.
+ */
 public class CLI implements UI {
 
     /**
      * ASCII font of the Quizzer logo
      */
-    private static final String QUIZZER = """
+    private static final String QUIZZER_SPLASH = """
               ____  _    _ _____ __________________ _____
             /  __ \\| |  | |_   _|___  /___  /  ____|  __ \\
             | |  | | |  | | | |    / /   / /| |__  | |__) |
             | |  | | |  | | | |   / /   / / |  __| |  _  /
             | |__| | |__| |_| |_ / /__ / /__| |____| | \\ \\
              \\___\\_\\\\____/|_____/_____/_____|______|_|  \\_\\""";
+    /**
+     * Path to the calling class/jar file, where the questions directory should be placed
+     */
     private String PATH;
     /**
      * Scanner to be used to take in user input
@@ -37,14 +44,14 @@ public class CLI implements UI {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             clearScreen();
             System.out.println("Thanks for playing!");
-            System.out.println(QUIZZER);
+            System.out.println(QUIZZER_SPLASH);
         }));
 
         PATH = getPath();
 
         clearScreen();
         // Welcome messages
-        System.out.println(QUIZZER);
+        System.out.println(QUIZZER_SPLASH);
         System.out.println("Welcome to Quizzer!");
         promptEnter();
         QuestionLoader loader = new QuestionLoader(new File(PATH + "questions/"));
@@ -110,11 +117,17 @@ public class CLI implements UI {
                 correct, numQuestions, percentage);
     }
 
+    /**
+     * Logs in the user.
+     *
+     * @return The User object for the newly logged-in user
+     */
     private User login() {
+        // Class to handle loading the users' file
         Login login = new Login(new File(PATH + "GameData/users.txt"));
         User user;
         Console console = System.console();
-        // If the program is run from within an IDE
+        // If the program is run from within an IDE, skip the login system
         if (console == null) {
             System.out.println("""
                     You are running Quizzer from with an IDE.
@@ -208,7 +221,6 @@ public class CLI implements UI {
      */
     public User promptLogin(Login login) {
         String user;
-        clearScreen();
         Console console = System.console();
         // Keep looping until valid credentials are entered
         while (true) {
