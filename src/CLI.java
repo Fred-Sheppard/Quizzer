@@ -231,30 +231,44 @@ public class CLI implements UI {
         String name;
         String password;
         Console console = System.console();
+        // Keep looping until a valid username (one that doesn't exist) is provided
         while (true) {
+            clearScreen();
             String username = console.readLine("Enter your new username: ");
-            char[] pass1 = console.readPassword("Enter your new password: ");
-            char[] pass2 = console.readPassword("Re-enter your new password: ");
-            // Assert the passwords are equal
-            if (!Arrays.equals(pass1, pass2)) {
-                clearScreen();
-                System.out.println("Passwords must be the same.");
+            if (login.userExists(username)) {
+                System.out.println("User already exists");
                 promptEnter();
                 continue;
             }
             name = username;
-            password = new String(pass1);
-            // Loop if the user could not be created
-            if (!login.createUser(name, password)) {
-                System.out.println("User already exists");
-                promptEnter();
-            } else {
-                break;
-            }
+            password = getPassword(console);
+            // If the passwords were not the same
+            if (password == null) continue;
+            login.createUser(username, password);
+            break;
         }
         System.out.println("Success! Welcome to Quizzer!");
         promptEnter();
         return new User(name);
+    }
+
+    /**
+     * Prompts the user to enter a password twice, asserting they are equal.
+     *
+     * @param console The console object to read the password from
+     * @return The
+     */
+    private String getPassword(Console console) {
+        char[] pass1 = console.readPassword("Enter your new password: ");
+        char[] pass2 = console.readPassword("Re-enter your new password: ");
+        // Assert the passwords are equal
+        if (!Arrays.equals(pass1, pass2)) {
+            clearScreen();
+            System.out.println("Passwords must be the same.");
+            promptEnter();
+            return null;
+        }
+        return new String(pass1);
     }
 
     /**

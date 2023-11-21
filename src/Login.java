@@ -57,12 +57,11 @@ public class Login {
      *
      * @param user     The username of the user
      * @param password The password of the user
-     * @return Returns false if the user already exists
      */
-    public boolean createUser(String user, String password) {
+    public void createUser(String user, String password) {
         // If the user already exists
-        if (users.containsKey(user)) {
-            return false;
+        if (this.userExists(user)) {
+            return;
         }
         // Hash the password using SHA-256
         String hashedPassword = this.hash(password);
@@ -72,7 +71,14 @@ public class Login {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return true;
+    }
+
+    /**
+     * @param username The username to check
+     * @return If the user already exists
+     */
+    public boolean userExists(String username) {
+        return users.containsKey(username);
     }
 
     /**
