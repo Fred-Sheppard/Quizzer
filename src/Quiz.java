@@ -19,7 +19,7 @@ public abstract class Quiz {
      * List of questions to be asked in a quiz.
      * This can be sorted to provide a unique quiz mode.
      */
-    public final ArrayList<Question> questions;
+    protected final ArrayList<Question> questions;
     /**
      * The user taking the quiz.
      * Quiz results will be written to this user's statistics.
