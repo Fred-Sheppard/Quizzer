@@ -9,7 +9,7 @@ import java.util.Comparator;
  * This order could be random, based on difficulty,
  * or on how successfully the user has answered each question in the past.
  */
-public abstract class Quiz {
+public class Quiz {
 
     /**
      * The topic of the quiz e.g. Discrete Maths, Comp Org etc.
@@ -36,7 +36,7 @@ public abstract class Quiz {
      * @param loader The question loader to load questions for the specified topic.
      * @param ui     Todo
      */
-    public Quiz(String topic, User user, QuestionLoader loader, UI ui) {
+    protected Quiz(String topic, User user, QuestionLoader loader, UI ui) {
         this.topic = topic;
         this.user = user;
         this.ui = ui;
@@ -72,7 +72,12 @@ public abstract class Quiz {
      */
     protected int askQuestions() {
         // Ask all questions, keeping track of the amount answered correctly
-        int correct = (int) questions.stream().filter(this::askQuestion).count();
+        int correct = 0;
+        for (Question question : questions) {
+            if (askQuestion(question)) {
+                correct++;
+            }
+        }
         // Increment the number of rounds played in the user's history once all questions have been asked
         user.getHistory().merge("Rounds", 1, Integer::sum);
         user.updateFile();
