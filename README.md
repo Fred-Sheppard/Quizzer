@@ -1,5 +1,5 @@
 # Quizzer
-ISE EPIC Project for Block 1
+Refactored Edition of ISE EPIC Project for Block 1 for Block 2 Object Oriented Programming Mini-Project
 
 # How to use: 
 
