@@ -331,7 +331,7 @@ public class CLI implements UI {
     }
 
     /**
-     * Pose the given question to the user for answering.
+     * Pose the given question to the user.
      *
      * @param question The question to be asked
      * @return If the user answered the question correctly
