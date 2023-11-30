@@ -111,6 +111,12 @@ public class Question {
         Collections.shuffle(possibilities);
     }
 
+    /**
+     * The index of the correct answer within the possibilities List.
+     * This is most useful after shuffling the list using shufflePossibilities().
+     *
+     * @return The index of the correct answer.
+     */
     public int correctIndex() {
         return possibilities().indexOf(answer);
     }
