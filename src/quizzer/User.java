@@ -1,3 +1,5 @@
+package quizzer;
+
 import java.io.*;
 import java.util.*;
 
@@ -26,7 +28,7 @@ public class User {
     private final File historyFile;
 
     /**
-     * Creates a User with the given username.
+     * Creates a quizzer.User with the given username.
      *
      * @param name The user's username
      */
@@ -51,7 +53,7 @@ public class User {
         Map<String, Integer> map = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(historyFile))) {
             // Create a new HashMap to count the number of questions answered incorrectly by the user
-            // <Question>|<Count> gets split into key and value, and is placed into the map
+            // <quizzer.Question>|<Count> gets split into key and value, and is placed into the map
             reader.lines().forEach(line -> {
                 String[] split = line.split("\\|");
                 map.put(split[0], Integer.parseInt(split[1]));
@@ -91,7 +93,7 @@ public class User {
      * TOTAL_CORRECT
      * TOTAL_ANSWERED}</pre>
      * <p>
-     * To query standard deviation, use User.stdDev().
+     * To query standard deviation, use quizzer.User.stdDev().
      *
      * @param stat The statistic to be queried
      * @return The value of the queried statistic

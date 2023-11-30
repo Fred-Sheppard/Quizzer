@@ -1,3 +1,10 @@
+package quizzer;
+
+import quizzer.quiz.EscalationQuiz;
+import quizzer.quiz.Quiz;
+import quizzer.quiz.RandomQuiz;
+import quizzer.quiz.RedemptionQuiz;
+
 import java.io.Console;
 import java.io.File;
 import java.util.Arrays;
@@ -75,6 +82,13 @@ public class CLI implements UI {
         }
     }
 
+    /**
+     * Retrieves the path to the application's entrypoint.
+     * If run as a class, this is an empty string.
+     * If run from a jar file, this will be the path to the jar.
+     *
+     * @return Path to the application's entrypoint
+     */
     private String getPath() {
         String path;
         File jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
@@ -107,13 +121,13 @@ public class CLI implements UI {
 
     private void playQuiz(Quiz quiz) {
         clearScreen();
-        int numQuestions = quiz.questions.size();
+        int numQuestions = quiz.getQuestions().size();
         System.out.printf("You have selected the %s topic.%n", quiz.topic());
         System.out.printf("This topic contains %d questions.%n", numQuestions);
         promptEnter();
         int correct = quiz.askQuestions();
         double percentage = (double) correct / (double) numQuestions;
-        System.out.printf("Quiz complete! You got %d out of %d questions correct! (%.0f%%)%n",
+        System.out.printf("quizzer.quiz.Quiz complete! You got %d out of %d questions correct! (%.0f%%)%n",
                 correct, numQuestions, percentage);
     }
 
@@ -349,5 +363,15 @@ public class CLI implements UI {
             promptEnter();
             return false;
         }
+    }
+
+    @Override
+    public void displayResults(int correctQuestions, int totalQuestions) {
+        clearScreen();
+        double percentage = correctQuestions / 6.0 * 100.0;
+        System.out.println("Quiz complete!");
+        System.out.printf("You got %d questions out of %d correct, %.0f%%%n",
+                correctQuestions, totalQuestions, percentage);
+        promptEnter();
     }
 }

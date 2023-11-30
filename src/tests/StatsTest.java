@@ -1,5 +1,10 @@
-public class Tests {
-    public static void main(String[] args) {
+package tests;
+
+import quizzer.Statistic;
+import quizzer.User;
+
+public class StatsTest {
+    public static void run() {
         testMean();
         testMedian();
     }

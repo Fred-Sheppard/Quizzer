@@ -1,3 +1,5 @@
+package quizzer;
+
 public enum Statistic {
     MEAN,
     MEDIAN,
